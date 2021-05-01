@@ -7,7 +7,7 @@ namespace FileSystemUnitTests
     [TestClass]
     public class DirectoryEnumeratorTests
     {
-        readonly string scanFolder = @"C:\Development"; //@"\\compservicesftp-test.ecomad.int\Projects"; // @"C:\"; // @"c:\Development\Temp";
+        readonly string scanFolder = @"C:\Development"; 
         readonly string filesFileName = @"C:\Development\Temp\FileSystemProcessor\Files.txt";
         readonly string directoriesFileName = @"C:\Development\Temp\FileSystemProcessor\Directories.txt";
         readonly string filesystemFileName = @"C:\Development\Temp\FileSystemProcessor\FileSystem.txt";

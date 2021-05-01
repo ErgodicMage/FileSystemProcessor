@@ -20,8 +20,8 @@ namespace FileSystemUnitTests
         public static bool FileGreaterThan1MB(FileSystemInfo info) => ((FileInfo)info).Length > 1048576;
         public static bool FileIsPDFGreaterThan1MB(FileSystemInfo info) => FileIsPDF(info) && FileGreaterThan1MB(info);
         public static bool DirectoryHasQRCodes(FileSystemInfo info) => info.Name.Equals("QRCodes");
-        public static bool IsCServeWS(FileSystemInfo info) => info.FullName.Contains(@"\CServeWS\");
-        public static bool IsCServeWSOrDDPEA(FileSystemInfo info) => IsCServeWS(info) || info.FullName.Contains(@"\DDPEA\");
+        public static bool IsFileSystemProcessor(FileSystemInfo info) => info.FullName.Contains(@"\FileSystemProcessor\");
+        public static bool IsFileSystemProcessorOrStellarMap(FileSystemInfo info) => IsFileSystemProcessor(info) || info.FullName.Contains(@"\StellarMap\");
         public static void WriteToFile(string path, IList<string> values)
         {
             if (File.Exists(path))

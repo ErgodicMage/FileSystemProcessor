@@ -9,8 +9,7 @@ namespace FileSystemUnitTests
     [TestClass]
     public class FindFilesTests
     {
-        readonly string scanFolder = @"\\compservicesftp-test.ecomad.int\Projects"; 
-        //readonly string scanFolder = @"C:\Development";
+        readonly string scanFolder = @"C:\Development";
         readonly string filesFileName = @"C:\Development\Temp\FileSystemProcessor\Files.txt";
 
         [TestMethod]

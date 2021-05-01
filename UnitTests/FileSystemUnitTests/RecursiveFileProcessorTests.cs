@@ -9,10 +9,7 @@ namespace FileSystemUnitTests
     [TestClass]
     public class RecursiveFileProcessorTests
     {
-        //readonly string scanFolder = @"C:\Development\Temp\FileSystemProcessor";
-        //readonly string scanFolder = @"C:\Development\Temp\FileSystemProcessor\src\Components\FileSystem"; 
-        //readonly string scanFolder = @"c:\Development";
-        readonly string scanFolder = @"C:\\Development\Temp";
+        readonly string scanFolder = @"C:\\Development";
         readonly string filesFileName = @"C:\Development\Temp\FileSystemProcessor\FileProcess.txt";
 
         [TestMethod]

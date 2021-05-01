@@ -9,8 +9,8 @@ namespace FileSystemUnitTests
     [TestClass]
     public class FindFoldersTests
     {
-        readonly string scanFolder = @"\\compservicesftp-test.ecomad.int\Projects"; //@"c:\Development";
-        readonly string directoriesFileName = @"C:\Development\Temp\FileSystemProcessor\Directories.txt";
+        readonly string scanFolder = @"c:\Development";
+        readonly string directoriesFileName = @"C:\Development\Temp\Directories.txt";
 
         [TestMethod]
         public void FindDirectoriesTest()
@@ -40,7 +40,7 @@ namespace FileSystemUnitTests
         [TestMethod]
         public void FindDirectoriesRegexTest()
         {
-            FindFilesOptions options = new FindFilesOptions() { Path = scanFolder, Pattern = "*", Recursive = true, RegExPattern=@"\b(\w*CServeWS\w*)\b" };
+            FindFilesOptions options = new FindFilesOptions() { Path = scanFolder, Pattern = "*", Recursive = true, RegExPattern=@"\b(\w*FileSystemProcessor\w*)\b" };
             FindFolders fd = new FindFolders(options);
 
             IList<string> values = TestUtilities.RunEnumerationToList(fd);
@@ -52,9 +52,9 @@ namespace FileSystemUnitTests
 
 
         [TestMethod]
-        public void FindDirectoriesFilterIsCServeWSTest()
+        public void FindDirectoriesFilterIsFileSystemProcessorTest()
         {
-            FindFilesOptions options = new FindFilesOptions() { Path = scanFolder, Pattern = "*", Recursive = true, Filter=TestUtilities.IsCServeWS };
+            FindFilesOptions options = new FindFilesOptions() { Path = scanFolder, Pattern = "*", Recursive = true, Filter=TestUtilities.IsFileSystemProcessor };
             FindFolders fd = new FindFolders(options);
 
             IList<string> values = TestUtilities.RunEnumerationToList(fd);
@@ -65,9 +65,9 @@ namespace FileSystemUnitTests
         }
 
         [TestMethod]
-        public void FindDirectoriesFilterIsCServeWSOrDDPEATest()
+        public void FindDirectoriesFilterIsFileSystemProcessorOrStellarMapTest()
         {
-            FindFilesOptions options = new FindFilesOptions() { Path = scanFolder, Pattern = "*", Recursive = true, Filter = TestUtilities.IsCServeWSOrDDPEA };
+            FindFilesOptions options = new FindFilesOptions() { Path = scanFolder, Pattern = "*", Recursive = true, Filter = TestUtilities.IsFileSystemProcessorOrStellarMap };
             FindFolders fd = new FindFolders(options);
 
             IList<string> values = TestUtilities.RunEnumerationToList(fd);
