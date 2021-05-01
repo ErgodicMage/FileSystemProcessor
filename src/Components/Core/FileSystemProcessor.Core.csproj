@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <PackageId>FileSystemProcessor.Core</PackageId>
+    <Authors>Ergodic Mage</Authors>
+    <Product>FileSystemProcessor</Product>
+  </PropertyGroup>
+
+</Project>
