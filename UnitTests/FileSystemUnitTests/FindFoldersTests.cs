@@ -9,85 +9,122 @@ namespace FileSystemUnitTests
     [TestClass]
     public class FindFoldersTests
     {
-        readonly string scanFolder = @"c:\Development";
-        readonly string directoriesFileName = @"C:\Development\Temp\Directories.txt";
-
-        [TestMethod]
-        public void FindDirectoriesTest()
+        public FindFoldersTests()
         {
-            FindFolders fd = new FindFolders(scanFolder);
-
-            IList<string> values = TestUtilities.RunEnumerationToList(fd);
-
-            TestUtilities.WriteToFile(directoriesFileName, values);
-
-            Assert.IsTrue(File.Exists(directoriesFileName));
+            TestUtilities.LoadAppSettings();
         }
 
         [TestMethod]
+        [TestCategory(TestCategories.FunctionalTest)]
+        public void FindDirectoriesTest()
+        {            
+            FindFolders fd = new FindFolders(TestUtilities.Config["ScanFolder"]);
+
+            IList<string> values = TestUtilities.RunEnumerationToList(fd);
+
+            TestUtilities.WriteToFile(TestUtilities.Config["DirectoriesFileName"], values);
+
+            Assert.IsTrue(File.Exists(TestUtilities.Config["DirectoriesFileName"]));
+        }
+
+        [TestMethod]
+        [TestCategory(TestCategories.FunctionalTest)]
         public void FindDirectoriesRecursiveTest()
         {
-            FindFilesOptions options = new FindFilesOptions() { Path = scanFolder, Pattern = "*", Recursive = true };
+            FindFilesOptions options = new FindFilesOptions() 
+            { 
+                Path = TestUtilities.Config["ScanFolder"], 
+                Pattern = "*", 
+                Recursive = true 
+            };
             FindFolders fd = new FindFolders(options);
 
             IList<string> values = TestUtilities.RunEnumerationToList(fd);
 
-            TestUtilities.WriteToFile(directoriesFileName, values);
+            TestUtilities.WriteToFile(TestUtilities.Config["DirectoriesFileName"], values);
 
-            Assert.IsTrue(File.Exists(directoriesFileName));
+            Assert.IsTrue(File.Exists(TestUtilities.Config["DirectoriesFileName"]));
         }
 
         [TestMethod]
+        [TestCategory(TestCategories.FunctionalTest)]
         public void FindDirectoriesRegexTest()
         {
-            FindFilesOptions options = new FindFilesOptions() { Path = scanFolder, Pattern = "*", Recursive = true, RegExPattern=@"\b(\w*FileSystemProcessor\w*)\b" };
+            FindFilesOptions options = new FindFilesOptions() 
+            { 
+                Path = TestUtilities.Config["ScanFolder"], 
+                Pattern = "*", 
+                Recursive = true, 
+                RegExPattern=@"\b(\w*FileSystemProcessor\w*)\b" 
+            };
             FindFolders fd = new FindFolders(options);
 
             IList<string> values = TestUtilities.RunEnumerationToList(fd);
 
-            TestUtilities.WriteToFile(directoriesFileName, values);
+            TestUtilities.WriteToFile(TestUtilities.Config["DirectoriesFileName"], values);
 
-            Assert.IsTrue(File.Exists(directoriesFileName));
+            Assert.IsTrue(File.Exists(TestUtilities.Config["DirectoriesFileName"]));
         }
 
 
         [TestMethod]
+        [TestCategory(TestCategories.FunctionalTest)]
         public void FindDirectoriesFilterIsFileSystemProcessorTest()
         {
-            FindFilesOptions options = new FindFilesOptions() { Path = scanFolder, Pattern = "*", Recursive = true, Filter=TestUtilities.IsFileSystemProcessor };
+            FindFilesOptions options = new FindFilesOptions() 
+            { 
+                Path = TestUtilities.Config["ScanFolder"], 
+                Pattern = "*", 
+                Recursive = true, 
+                Filter=TestUtilities.IsFileSystemProcessor 
+            };
             FindFolders fd = new FindFolders(options);
 
             IList<string> values = TestUtilities.RunEnumerationToList(fd);
 
-            TestUtilities.WriteToFile(directoriesFileName, values);
+            TestUtilities.WriteToFile(TestUtilities.Config["DirectoriesFileName"], values);
 
-            Assert.IsTrue(File.Exists(directoriesFileName));
+            Assert.IsTrue(File.Exists(TestUtilities.Config["DirectoriesFileName"]));
         }
 
         [TestMethod]
+        [TestCategory(TestCategories.FunctionalTest)]
         public void FindDirectoriesFilterIsFileSystemProcessorOrStellarMapTest()
         {
-            FindFilesOptions options = new FindFilesOptions() { Path = scanFolder, Pattern = "*", Recursive = true, Filter = TestUtilities.IsFileSystemProcessorOrStellarMap };
+            FindFilesOptions options = new FindFilesOptions() 
+            {
+                Path = TestUtilities.Config["ScanFolder"], 
+                Pattern = "*", 
+                Recursive = true, 
+                Filter = TestUtilities.IsFileSystemProcessorOrStellarMap 
+            };
             FindFolders fd = new FindFolders(options);
 
             IList<string> values = TestUtilities.RunEnumerationToList(fd);
 
-            TestUtilities.WriteToFile(directoriesFileName, values);
+            TestUtilities.WriteToFile(TestUtilities.Config["DirectoriesFileName"], values);
 
-            Assert.IsTrue(File.Exists(directoriesFileName));
+            Assert.IsTrue(File.Exists(TestUtilities.Config["DirectoriesFileName"]));
         }
 
         [TestMethod]
+        [TestCategory(TestCategories.FunctionalTest)]
         public void FindDirectoriesQRCodesTest()
         {
-            FindFilesOptions options = new FindFilesOptions() { Path = scanFolder, Pattern = "*", Recursive = true, Filter = TestUtilities.DirectoryHasQRCodes };
+            FindFilesOptions options = new FindFilesOptions() 
+            { 
+                Path = TestUtilities.Config["ScanFolder"], 
+                Pattern = "*", 
+                Recursive = true, 
+                Filter = TestUtilities.DirectoryHasQRCodes 
+            };
             FindFolders fd = new FindFolders(options);
 
             IList<string> values = TestUtilities.RunEnumerationToList(fd); ;
 
-            TestUtilities.WriteToFile(directoriesFileName, values);
+            TestUtilities.WriteToFile(TestUtilities.Config["DirectoriesFileName"], values);
 
-            Assert.IsTrue(File.Exists(directoriesFileName));
+            Assert.IsTrue(File.Exists(TestUtilities.Config["DirectoriesFileName"]));
         }
     }
 }

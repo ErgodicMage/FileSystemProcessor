@@ -9,13 +9,16 @@ namespace FileSystemUnitTests
     [TestClass]
     public class RecursiveFileProcessorTests
     {
-        readonly string scanFolder = @"C:\\Development";
-        readonly string filesFileName = @"C:\Development\Temp\FileSystemProcessor\FileProcess.txt";
+        public RecursiveFileProcessorTests()
+        {
+            TestUtilities.LoadAppSettings();
+        }
 
         [TestMethod]
+        [TestCategory(TestCategories.FunctionalTest)]
         public void RecursiveListFilesFoldersTest()
         {
-            RecursiveFileProcessor process = new RecursiveFileProcessor(scanFolder);
+            RecursiveFileProcessor process = new RecursiveFileProcessor(TestUtilities.Config["ScanFolder"]);
 
             IList<string> listText = new List<string>();
 
@@ -25,15 +28,16 @@ namespace FileSystemUnitTests
 
             process.DoProcess();
 
-            TestUtilities.WriteToFile(filesFileName, listText);
+            TestUtilities.WriteToFile(TestUtilities.Config["FilesFileName"], listText);
 
-            Assert.IsTrue(File.Exists(filesFileName));
+            Assert.IsTrue(File.Exists(TestUtilities.Config["FilesFileName"]));
         }
 
         [TestMethod]
+        [TestCategory(TestCategories.FunctionalTest)]
         public void AnthemPDFsTest()
         {
-            RecursiveFileProcessor process = new RecursiveFileProcessor(scanFolder);
+            RecursiveFileProcessor process = new RecursiveFileProcessor(TestUtilities.Config["ScanFolder"]);
             process.FileOptions.Filter = (fsi) => fsi.Name.EndsWith(".pdf", System.StringComparison.OrdinalIgnoreCase);
             process.FolderOptions.Filter = (fsi) => fsi.Name.Contains("anthem", System.StringComparison.OrdinalIgnoreCase);
 
@@ -45,15 +49,16 @@ namespace FileSystemUnitTests
 
             process.DoProcess();
 
-            TestUtilities.WriteToFile(filesFileName, listText);
+            TestUtilities.WriteToFile(TestUtilities.Config["FilesFileName"], listText);
 
-            Assert.IsTrue(File.Exists(filesFileName));
+            Assert.IsTrue(File.Exists(TestUtilities.Config["FilesFileName"]));
         }
 
         [TestMethod]
+        [TestCategory(TestCategories.FunctionalTest)]
         public void DoDeleteMeTest()
         {
-            RecursiveFileProcessor process = new RecursiveFileProcessor(scanFolder);
+            RecursiveFileProcessor process = new RecursiveFileProcessor(TestUtilities.Config["ScanFolder"]);
             process.FileOptions.Filter = (fsi) => fsi.Name.EndsWith("DeleteMe.txt", System.StringComparison.OrdinalIgnoreCase);
             process.FolderOptions.Filter = (fsi) => fsi.Name.Contains("DeleteMe", System.StringComparison.OrdinalIgnoreCase);
 
@@ -65,9 +70,9 @@ namespace FileSystemUnitTests
 
             process.DoProcess();
 
-            TestUtilities.WriteToFile(filesFileName, listText);
+            TestUtilities.WriteToFile(TestUtilities.Config["FilesFileName"], listText);
 
-            Assert.IsTrue(File.Exists(filesFileName));
+            Assert.IsTrue(File.Exists(TestUtilities.Config["FilesFileName"]));
         }
     }
 }

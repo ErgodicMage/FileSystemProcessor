@@ -8,20 +8,23 @@ namespace FileSystemUnitTests
 {
     [TestClass]
     public class FindFilesRecursiveTests
-    {         
-        readonly string scanFolder = @"c:\Development";
-        readonly string filesFileName = @"C:\Development\Temp\FileSystemProcessor\Files.txt";
+    {
+        public FindFilesRecursiveTests()
+        {
+            TestUtilities.LoadAppSettings();
+        }
 
         [TestMethod]
+        [TestCategory(TestCategories.FunctionalTest)]
         public void FindFilesRecursiveTest()
         {
-            FindFilesRecursive ffr = new FindFilesRecursive(scanFolder);
+            FindFilesRecursive ffr = new FindFilesRecursive(TestUtilities.Config["ScanFolder"]);
 
             IList<string> values = TestUtilities.RunEnumerationToList(ffr);
 
-            TestUtilities.WriteToFile(filesFileName, values);
+            TestUtilities.WriteToFile(TestUtilities.Config["FilesFileName"], values);
 
-            Assert.IsTrue(File.Exists(filesFileName));
+            Assert.IsTrue(File.Exists(TestUtilities.Config["FilesFileName"]));
         }
     }
 }
