@@ -41,8 +41,10 @@ namespace FileSystemUnitTests
         public static bool FileGreaterThan1MB(FileSystemInfo info) => ((FileInfo)info).Length > 1048576;
         public static bool FileIsPDFGreaterThan1MB(FileSystemInfo info) => FileIsPDF(info) && FileGreaterThan1MB(info);
         public static bool DirectoryHasQRCodes(FileSystemInfo info) => info.Name.Equals("QRCodes");
-        public static bool IsFileSystemProcessor(FileSystemInfo info) => info.FullName.Contains(@"\FileSystemProcessor\");
-        public static bool IsFileSystemProcessorOrStellarMap(FileSystemInfo info) => IsFileSystemProcessor(info) || info.FullName.Contains(@"\StellarMap\");
+        public static bool IsFileSystemProcessor(FileSystemInfo info) => info.IsDirectory()&&info.FullName.Contains(@"FileSystemProcessor");
+        public static bool IsStellarMap(FileSystemInfo info) => info.IsDirectory()&&info.FullName.Contains(@"StellarMap");
+
+        public static bool IsFileSystemProcessorOrStellarMap(FileSystemInfo info) => IsFileSystemProcessor(info) || IsStellarMap(info);
         #endregion
 
         #region Write functionality

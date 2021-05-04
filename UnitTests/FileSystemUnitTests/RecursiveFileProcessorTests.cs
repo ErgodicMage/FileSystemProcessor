@@ -35,27 +35,6 @@ namespace FileSystemUnitTests
 
         [TestMethod]
         [TestCategory(TestCategories.FunctionalTest)]
-        public void AnthemPDFsTest()
-        {
-            RecursiveFileProcessor process = new RecursiveFileProcessor(TestUtilities.Config["ScanFolder"]);
-            process.FileOptions.Filter = (fsi) => fsi.Name.EndsWith(".pdf", System.StringComparison.OrdinalIgnoreCase);
-            process.FolderOptions.Filter = (fsi) => fsi.Name.Contains("anthem", System.StringComparison.OrdinalIgnoreCase);
-
-            IList<string> listText = new List<string>();
-
-            process.FileProcess = (fsi) => listText.Add(fsi.Name);
-            process.EnterFolderProcess = (fsi) => listText.Add($"Enter {fsi.Name}");
-            process.ExitFolderProcess = (fsi) => listText.Add($"Exit {fsi.Name}");
-
-            process.DoProcess();
-
-            TestUtilities.WriteToFile(TestUtilities.Config["FilesFileName"], listText);
-
-            Assert.IsTrue(File.Exists(TestUtilities.Config["FilesFileName"]));
-        }
-
-        [TestMethod]
-        [TestCategory(TestCategories.FunctionalTest)]
         public void DoDeleteMeTest()
         {
             RecursiveFileProcessor process = new RecursiveFileProcessor(TestUtilities.Config["ScanFolder"]);
