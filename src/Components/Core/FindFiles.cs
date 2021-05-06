@@ -8,7 +8,12 @@ namespace FileSystem
 {
     public class FindFiles : IFindFileSystem
     {
-        #region Constructore
+        #region Constructors
+        public FindFiles()
+        {
+            Options = new FindFilesOptions();
+        }
+
         public FindFiles(string path)
         {
             Options = new FindFilesOptions();
@@ -26,6 +31,49 @@ namespace FileSystem
             Options.Options = new EnumerationOptions() { RecurseSubdirectories = recursive };
         }
 
+        #endregion
+
+        #region Fluent API
+        public IFindFileSystem WithOptions(FindFilesOptions options)
+        {
+            Options = options;
+            return this;
+        }
+
+        public IFindFileSystem WithPath(string path)
+        {
+            Options.Path = path;
+            return this;
+        }
+
+        public IFindFileSystem WithPattern(string pattern)
+        {
+            Options.Pattern = pattern;
+            return this;
+        }
+
+        public IFindFileSystem WithRegexPattern(string regex)
+        {
+            Options.RegExPattern = regex;
+            return this;            
+        }
+
+        public IFindFileSystem Recursive()
+        {
+            if (Options.Options == null)
+                Options.Options = new EnumerationOptions();
+            Options.Options.RecurseSubdirectories = true;
+            return this;            
+        }
+
+        public IFindFileSystem AddFilter(Func<FileSystemInfo, bool> filter)
+        {
+            if (Options.Filter == null)
+                Options.Filter = filter;
+            else
+                Options.Filter += filter;
+            return this;            
+        }
         #endregion
 
         #region Properties

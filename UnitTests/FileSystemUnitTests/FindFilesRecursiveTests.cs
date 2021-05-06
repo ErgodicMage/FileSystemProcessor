@@ -18,7 +18,8 @@ namespace FileSystemUnitTests
         [TestCategory(TestCategories.FunctionalTest)]
         public void FindFilesRecursiveTest()
         {
-            FindFilesRecursive ffr = new FindFilesRecursive(TestUtilities.Config["ScanFolder"]);
+            IFindFileSystem ffr = new FindFilesRecursive()
+                                    .WithPath(TestUtilities.Config["ScanFolder"]);
 
             IList<string> values = TestUtilities.RunEnumerationToList(ffr);
 

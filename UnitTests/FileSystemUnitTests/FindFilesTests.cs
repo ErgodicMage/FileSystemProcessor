@@ -18,7 +18,7 @@ namespace FileSystemUnitTests
         [TestCategory(TestCategories.FunctionalTest)]
         public void FindFilesTest()
         {
-            FindFiles ff = new FindFiles(TestUtilities.Config["ScanFolder"]);
+            IFindFileSystem ff = new FindFiles().WithPath(TestUtilities.Config["ScanFolder"]);
 
             IList<string> values = TestUtilities.RunEnumerationToList(ff);
 
@@ -30,14 +30,26 @@ namespace FileSystemUnitTests
         [TestMethod]
         [TestCategory(TestCategories.FunctionalTest)]
         public void FindFilesRecursiveTest()
-        {
-            FindFilesOptions options = new FindFilesOptions() 
-            { 
-                Path = TestUtilities.Config["ScanFolder"], 
-                Pattern = "*", 
-                Recursive = true 
-            };
-            FindFiles ff = new FindFiles(options);
+        {            
+            IFindFileSystem ff = new FindFiles()
+                                    .WithPath(TestUtilities.Config["ScanFolder"])
+                                    .Recursive();
+
+            IList<string> values = TestUtilities.RunEnumerationToList(ff);
+
+            TestUtilities.WriteToFile(TestUtilities.Config["FilesFileName"], values);
+
+            Assert.IsTrue(File.Exists(TestUtilities.Config["FilesFileName"]));
+        }
+
+        [TestMethod]
+        [TestCategory(TestCategories.FunctionalTest)]
+        public void FindFilesPDFPatternTest()
+        {            
+            IFindFileSystem ff = new FindFiles()
+                                    .WithPath(TestUtilities.Config["ScanFolder"])
+                                    .WithPattern("*.pdf")
+                                    .Recursive();
 
             IList<string> values = TestUtilities.RunEnumerationToList(ff);
 
@@ -50,14 +62,10 @@ namespace FileSystemUnitTests
         [TestCategory(TestCategories.FunctionalTest)]
         public void FindFilesRegexTest()
         {
-            FindFilesOptions options = new FindFilesOptions() 
-            { 
-                Path = TestUtilities.Config["ScanFolder"], 
-                Pattern = "*", 
-                RegExPattern = @".+\.pdf$", 
-                Recursive = true 
-            };
-            FindFiles ff = new FindFiles(options);
+            IFindFileSystem ff = new FindFiles()
+                                    .WithPath(TestUtilities.Config["ScanFolder"])
+                                    .WithRegexPattern(@".+\.pdf$")
+                                    .Recursive();
 
             IList<string> values = TestUtilities.RunEnumerationToList(ff);
 
@@ -70,14 +78,10 @@ namespace FileSystemUnitTests
         [TestCategory(TestCategories.FunctionalTest)]
         public void FindFilesFilterIsPDFTest()
         {
-            FindFilesOptions options = new FindFilesOptions() 
-            { 
-                Path = TestUtilities.Config["ScanFolder"], 
-                Pattern = "*", 
-                Recursive = true, 
-                Filter = TestUtilities.FileIsPDF 
-            };
-            FindFiles ff = new FindFiles(options);
+            IFindFileSystem ff = new FindFiles()
+                                    .WithPath(TestUtilities.Config["ScanFolder"])                                    
+                                    .Recursive()
+                                    .AddFilter(TestUtilities.FileIsPDF);
 
             IList<string> values = TestUtilities.RunEnumerationToList(ff);
 
@@ -90,14 +94,10 @@ namespace FileSystemUnitTests
         [TestCategory(TestCategories.FunctionalTest)]
         public void FindFilesFilter1MBTest()
         {
-            FindFilesOptions options = new FindFilesOptions() 
-            { 
-                Path = TestUtilities.Config["ScanFolder"], 
-                Pattern = "*", 
-                Recursive = true, 
-                Filter=TestUtilities.FileGreaterThan1MB 
-            };
-            FindFiles ff = new FindFiles(options);
+            IFindFileSystem ff = new FindFiles()
+                                    .WithPath(TestUtilities.Config["ScanFolder"])                                    
+                                    .Recursive()
+                                    .AddFilter(TestUtilities.FileGreaterThan1MB);
 
             IList<string> values = TestUtilities.RunEnumerationToList(ff);
 
@@ -117,7 +117,11 @@ namespace FileSystemUnitTests
                 Recursive = true, 
                 Filter = TestUtilities.FileIsPDFGreaterThan1MB 
             };
-            FindFiles ff = new FindFiles(options);
+            IFindFileSystem ff = new FindFiles()
+                                    .WithPath(TestUtilities.Config["ScanFolder"])                                    
+                                    .Recursive()
+                                    .AddFilter(TestUtilities.FileIsPDF)
+                                    .AddFilter(TestUtilities.FileGreaterThan1MB);
 
             IList<string> values = TestUtilities.RunEnumerationToList(ff);
 

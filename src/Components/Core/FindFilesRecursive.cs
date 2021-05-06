@@ -7,6 +7,12 @@ namespace FileSystem
     public class FindFilesRecursive : IFindFileSystem
     {
         #region Constructors
+        public FindFilesRecursive()
+        {
+            Options = new FindFilesOptions();
+            FolderOptions = new FindFilesOptions();
+        }
+        
         public FindFilesRecursive(string path)
         {
             Options = new FindFilesOptions();
@@ -34,6 +40,55 @@ namespace FileSystem
             FolderOptions.Recursive = false;
         }
         #endregion
+
+                #region Fluent API
+        public IFindFileSystem WithOptions(FindFilesOptions options)
+        {
+            Options = options;
+            FolderOptions.Path = options.Path;
+            FolderOptions.Recursive = false;
+            return this;
+        }
+
+        public IFindFileSystem WithPath(string path)
+        {
+            Options.Path = path;
+            FolderOptions.Path = path;
+            FolderOptions.Recursive = false;
+            return this;
+        }
+
+        public IFindFileSystem WithPattern(string pattern)
+        {
+            Options.Pattern = pattern;
+            FolderOptions.Recursive = false;
+            return this;
+        }
+
+        public IFindFileSystem WithRegexPattern(string regex)
+        {
+            Options.RegExPattern = regex;
+            FolderOptions.Recursive = false;
+            return this;            
+        }
+
+        public IFindFileSystem Recursive()
+        {
+            Options.Recursive = true;
+            FolderOptions.Recursive = false;
+            return this;            
+        }
+
+        public IFindFileSystem AddFilter(Func<FileSystemInfo, bool> filter)
+        {
+            if (Options.Filter == null)
+                Options.Filter = filter;
+            else
+                Options.Filter += filter;
+            return this;            
+        }
+        #endregion
+
 
         #region Properties
         public FindFilesOptions Options { get; set; }
