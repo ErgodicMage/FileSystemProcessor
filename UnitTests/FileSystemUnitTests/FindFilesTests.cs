@@ -81,7 +81,7 @@ namespace FileSystemUnitTests
             IFindFileSystem ff = new FindFiles()
                                     .WithPath(TestUtilities.Config["ScanFolder"])                                    
                                     .Recursive()
-                                    .AddFilter(TestUtilities.FileIsPDF);
+                                    .WithFilter(TestUtilities.FileIsPDF);
 
             IList<string> values = TestUtilities.RunEnumerationToList(ff);
 
@@ -97,7 +97,7 @@ namespace FileSystemUnitTests
             IFindFileSystem ff = new FindFiles()
                                     .WithPath(TestUtilities.Config["ScanFolder"])                                    
                                     .Recursive()
-                                    .AddFilter(TestUtilities.FileGreaterThan1MB);
+                                    .WithFilter(TestUtilities.FileGreaterThan1MB);
 
             IList<string> values = TestUtilities.RunEnumerationToList(ff);
 
@@ -118,10 +118,9 @@ namespace FileSystemUnitTests
                 Filter = TestUtilities.FileIsPDFGreaterThan1MB 
             };
             IFindFileSystem ff = new FindFiles()
-                                    .WithPath(TestUtilities.Config["ScanFolder"])                                    
+                                    .WithPath(TestUtilities.Config["ScanFolder"])
                                     .Recursive()
-                                    .AddFilter(TestUtilities.FileIsPDF)
-                                    .AddFilter(TestUtilities.FileGreaterThan1MB);
+                                    .WithFilter(TestUtilities.FileIsPDFGreaterThan1MB);
 
             IList<string> values = TestUtilities.RunEnumerationToList(ff);
 

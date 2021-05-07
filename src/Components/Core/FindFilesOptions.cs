@@ -13,7 +13,7 @@ namespace FileSystem
         public string Pattern { get; set; }
         public string RegExPattern { get; set; }
         public bool Recursive { get; set; }
-        public Func<FileSystemInfo, bool> Filter {get;set; }
+        public Predicate<FileSystemInfo> Filter {get;set; }
         public EnumerationOptions Options { get; set; }
 
         internal readonly static EnumerationOptions DefaultEnumerationOptions = new EnumerationOptions() { IgnoreInaccessible = true, AttributesToSkip = FileAttributes.Hidden | FileAttributes.System };

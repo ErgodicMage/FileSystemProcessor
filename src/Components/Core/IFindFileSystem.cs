@@ -12,7 +12,7 @@ namespace FileSystem
         IFindFileSystem WithPattern(string pattern);
         IFindFileSystem WithRegexPattern(string regex);
         IFindFileSystem Recursive();
-        IFindFileSystem AddFilter(Func<FileSystemInfo, bool> filter);
+        IFindFileSystem WithFilter(Predicate<FileSystemInfo> filter);
 
         #endregion
 

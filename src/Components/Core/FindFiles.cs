@@ -25,7 +25,7 @@ namespace FileSystem
             Options = options;
         }
 
-        public FindFiles(string path, string pattern, bool recursive, string regexpattern = "", Func<FileSystemInfo, bool> filter = null)
+        public FindFiles(string path, string pattern, bool recursive, string regexpattern = "", Predicate<FileSystemInfo> filter = null)
         {
             Options = new FindFilesOptions() { Path = path, Pattern = pattern, RegExPattern = regexpattern, Filter = filter };
             Options.Options = new EnumerationOptions() { RecurseSubdirectories = recursive };
@@ -66,12 +66,9 @@ namespace FileSystem
             return this;            
         }
 
-        public IFindFileSystem AddFilter(Func<FileSystemInfo, bool> filter)
+        public IFindFileSystem WithFilter(Predicate<FileSystemInfo> filter)
         {
-            if (Options.Filter == null)
-                Options.Filter = filter;
-            else
-                Options.Filter += filter;
+            Options.Filter = filter;
             return this;            
         }
         #endregion

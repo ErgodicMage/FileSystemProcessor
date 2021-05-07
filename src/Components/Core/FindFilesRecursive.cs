@@ -32,7 +32,7 @@ namespace FileSystem
             FolderOptions.Recursive = false;
         }
 
-        public FindFilesRecursive(string path, string pattern, string regexpattern = "", Func<FileSystemInfo, bool> filter = null)
+        public FindFilesRecursive(string path, string pattern, string regexpattern = "", Predicate<FileSystemInfo> filter = null)
         {
             Options = new FindFilesOptions() { Path = path, Pattern = pattern, Recursive=false, RegExPattern = regexpattern, Filter = filter };
             FolderOptions = new FindFilesOptions();
@@ -41,7 +41,7 @@ namespace FileSystem
         }
         #endregion
 
-                #region Fluent API
+        #region Fluent API
         public IFindFileSystem WithOptions(FindFilesOptions options)
         {
             Options = options;
@@ -79,12 +79,9 @@ namespace FileSystem
             return this;            
         }
 
-        public IFindFileSystem AddFilter(Func<FileSystemInfo, bool> filter)
+        public IFindFileSystem WithFilter(Predicate<FileSystemInfo> filter)
         {
-            if (Options.Filter == null)
-                Options.Filter = filter;
-            else
-                Options.Filter += filter;
+            Options.Filter += filter;
             return this;            
         }
         #endregion

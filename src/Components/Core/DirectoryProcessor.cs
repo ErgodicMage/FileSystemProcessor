@@ -17,7 +17,7 @@ namespace FileSystem
             fd = new FindFolders(options);
         }
 
-        public DirectoryProcessor(string path, string pattern, bool recursive, string regexpattern = "", Func<FileSystemInfo, bool> filter = null)
+        public DirectoryProcessor(string path, string pattern, bool recursive, string regexpattern = "", Predicate<FileSystemInfo> filter = null)
         {
             fd = new FindFolders(path, pattern, recursive, regexpattern, filter);
         }

@@ -22,7 +22,7 @@ namespace FileSystem
             FolderOptions = folderOptions;
         }
 
-        public RecursiveFileProcessor(string path, string pattern, string regexpattern = "", Func<FileSystemInfo, bool> filefilter = null, Func<FileSystemInfo, bool> folderfilter = null)
+        public RecursiveFileProcessor(string path, string pattern, string regexpattern = "", Predicate<FileSystemInfo> filefilter = null, Predicate<FileSystemInfo> folderfilter = null)
         {
             FileOptions = new FindFilesOptions() { Path = path, Pattern = pattern, Recursive = false, RegExPattern = regexpattern, Filter = filefilter };
             FolderOptions = new FindFilesOptions();

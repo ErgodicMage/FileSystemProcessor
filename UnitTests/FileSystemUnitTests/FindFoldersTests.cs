@@ -69,7 +69,7 @@ namespace FileSystemUnitTests
                                     .WithPath(TestUtilities.Config["ScanFolder"])
                                     .WithPattern("*")
                                     .Recursive()
-                                    .AddFilter(TestUtilities.IsFileSystemProcessor);
+                                    .WithFilter(TestUtilities.IsFileSystemProcessor);
 
             IList<string> values = TestUtilities.RunEnumerationToList(fd);
 
@@ -93,7 +93,7 @@ namespace FileSystemUnitTests
                                     .WithPath(TestUtilities.Config["ScanFolder"])
                                     .WithPattern("*")
                                     .Recursive()
-                                    .AddFilter(TestUtilities.IsFileSystemProcessorOrStellarMap);
+                                    .WithFilter(TestUtilities.IsFileSystemProcessorOrStellarMap);
 
             IList<string> values = TestUtilities.RunEnumerationToList(fd);
 

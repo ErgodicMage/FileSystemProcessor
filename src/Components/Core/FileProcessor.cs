@@ -16,7 +16,7 @@ namespace FileSystem
             _findfiles = new FindFiles(options);
         }
 
-        public FileProcessor(string path, string pattern, bool recursive, string regexpattern = "", Func<FileSystemInfo, bool> filter = null)
+        public FileProcessor(string path, string pattern, bool recursive, string regexpattern = "", Predicate<FileSystemInfo> filter = null)
         {
             _findfiles = new FindFiles(path, pattern, recursive, regexpattern, filter);
         }
