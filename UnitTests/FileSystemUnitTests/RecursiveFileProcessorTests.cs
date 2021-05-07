@@ -22,7 +22,7 @@ namespace FileSystemUnitTests
 
             IList<string> listText = new List<string>();
 
-            process.FileProcess = (fsi) => listText.Add(fsi.Name);
+            process.FileProcess = (fsi) => {listText.Add($"{fsi.Name} {(fsi as FileInfo)?.Length}"); };
             process.EnterFolderProcess = (fsi) => listText.Add($"Enter {fsi.FullName}");
             process.ExitFolderProcess = (fsi) => listText.Add($"Exit {fsi.FullName}");
 
