@@ -40,6 +40,8 @@ namespace FileSystem
         #region Properties
         public FindFilesOptions FileOptions { get; set; }
         public FindFilesOptions FolderOptions { get; set; }
+        public Action<FileSystemInfo> EnterFolder { get; set; }
+        public Action<FileSystemInfo> ExitFolder { get; set; }
 
         protected IEnumerator<FileSystemInfo> CurrentFileEnumerator { get; private set; }
         protected IEnumerator<FileSystemInfo> CurrentFolderEnumerator { get; private set; }
@@ -165,7 +167,7 @@ namespace FileSystem
         {
             if (CurrentFolderEnumerator != null)
             {
-                EnterSubFolder(CurrentFolderEnumerator.Current);
+                EnterFolder?.Invoke(CurrentFolderEnumerator.Current);
                 FolderOptions.Path = CurrentFolderEnumerator.Current.FullName;
                 FolderStack.Push(CurrentFolderEnumerator);
             }
@@ -181,10 +183,6 @@ namespace FileSystem
             FindFiles findFiles = new FindFiles(FileOptions);
             CurrentFileEnumerator = findFiles.Enumerate().GetEnumerator();
 
-        }
-
-        protected virtual void EnterSubFolder(FileSystemInfo fsi)
-        {
         }
 
         private void EndSubFolder()
@@ -206,12 +204,8 @@ namespace FileSystem
                 CurrentFolderEnumerator = FolderStack.Pop();
                 FileSystemInfo fsi = CurrentFolderEnumerator.Current;
                 if (fsi != null)
-                    ExitSubFolder(fsi);
+                    ExitFolder?.Invoke(fsi);
             }
-        }
-
-        protected virtual void ExitSubFolder(FileSystemInfo fsi)
-        {
         }
         #endregion
     }

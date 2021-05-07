@@ -43,33 +43,14 @@ namespace FileSystem
 
         public void DoProcess()
         {
-            RecursiveFileProcessEnumerator enumerator = new RecursiveFileProcessEnumerator(FileOptions, FolderOptions);
-            enumerator.EnterFolderProcess = EnterFolderProcess;
-            enumerator.ExitFolderProcess = ExitFolderProcess;
+            FindFilesRecursiveEnumerator enumerator = new FindFilesRecursiveEnumerator(FileOptions, FolderOptions);
+            enumerator.EnterFolder = EnterFolderProcess;
+            enumerator.ExitFolder = ExitFolderProcess;
 
             while (enumerator.MoveNext())
             {
                 FileProcess?.Invoke(enumerator.Current);
             }
         }
-    }
-
-    public class RecursiveFileProcessEnumerator : FindFilesRecursiveEnumerator
-    {
-        #region Constructor
-        public RecursiveFileProcessEnumerator(FindFilesOptions fileOptions, FindFilesOptions folderOptions) : base(fileOptions, folderOptions)
-        { }
-        #endregion
-
-        #region Actions
-        public Action<FileSystemInfo> EnterFolderProcess { get; set; }
-        public Action<FileSystemInfo> ExitFolderProcess { get; set; }
-        #endregion
-
-        #region #override methods
-        protected override void EnterSubFolder(FileSystemInfo fsi) => EnterFolderProcess?.Invoke(fsi);
-
-        protected override void ExitSubFolder(FileSystemInfo fsi) => ExitFolderProcess?.Invoke(fsi);
-        #endregion
     }
 }
