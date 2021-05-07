@@ -104,7 +104,7 @@ namespace FileSystem
                 enumerable = (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateDirectories(Options.Pattern, enumerationoptions);
             else if (!string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter == null)
             {
-                Regex regex = new Regex(Options.RegExPattern);
+                Regex regex = new Regex(Options.RegExPattern, RegexOptions.Compiled);
                 enumerable = (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateDirectories(Options.Pattern, enumerationoptions)
                     .Where(file => regex.IsMatch(file.FullName));
             }
