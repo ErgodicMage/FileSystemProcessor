@@ -15,18 +15,18 @@ namespace FileSystem
         IRecursiveFileProcessor WithFolderRegexPattern(string pattern);
         IRecursiveFileProcessor WithFileFilter(Predicate<FileSystemInfo> filter);
         IRecursiveFileProcessor WithFolderFilter(Predicate<FileSystemInfo> filter);
-        IRecursiveFileProcessor WithFileAction(Action<FileSystemInfo> action);
-        IRecursiveFileProcessor WithEnterFolderAction(Action<FileSystemInfo> action);
-        IRecursiveFileProcessor WithExitFolderAction(Action<FileSystemInfo> action);
+        IRecursiveFileProcessor WithFileAction(Action<FileInfo> action);
+        IRecursiveFileProcessor WithEnterFolderAction(Action<DirectoryInfo> action);
+        IRecursiveFileProcessor WithExitFolderAction(Action<DirectoryInfo> action);
         #endregion
 
         #region Properties
         FindFilesOptions FileOptions { get; set; }
         FindFilesOptions FolderOptions { get; set; }
 
-        Action<FileSystemInfo> FileAction { get; set; }
-        Action<FileSystemInfo> EnterFolderAction { get; set; }
-        Action<FileSystemInfo> ExitFolderAction { get; set; }
+        Action<FileInfo> FileAction { get; set; }
+        Action<DirectoryInfo> EnterFolderAction { get; set; }
+        Action<DirectoryInfo> ExitFolderAction { get; set; }
         #endregion
 
         void DoProcess();
