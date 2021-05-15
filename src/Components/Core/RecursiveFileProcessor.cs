@@ -4,9 +4,14 @@ using System.IO;
 
 namespace FileSystem
 {
-    public class RecursiveFileProcessor
+    public class RecursiveFileProcessor : IRecursiveFileProcessor
     {
         #region Constructors
+        public RecursiveFileProcessor()
+        {
+            FileOptions = new FindFilesOptions();
+            FolderOptions = new FindFilesOptions();
+        }
         public RecursiveFileProcessor(string path)
         {
             FileOptions = new FindFilesOptions();
@@ -32,24 +37,98 @@ namespace FileSystem
         }
         #endregion
 
+        #region FluentAPI
+        public IRecursiveFileProcessor WithFileOptions(FindFilesOptions options)
+        {
+            FileOptions = options;
+            return this;
+        }
+
+        public IRecursiveFileProcessor WithFolderOptions(FindFilesOptions options)
+        {
+            FolderOptions = FileOptions;
+            return this;
+        }
+
+        public IRecursiveFileProcessor WithPath(string path)
+        {
+            FolderOptions.Path = path;
+            return this;
+        }
+
+        public IRecursiveFileProcessor WithFilePattern(string pattern)
+        {
+            FileOptions.Pattern = pattern;
+            return this;
+        }
+
+        public IRecursiveFileProcessor WithFolderPattern(string pattern)
+        {
+            FolderOptions.Pattern = pattern;
+            return this;
+        }
+
+        public IRecursiveFileProcessor WithFileRegexPattern(string regex)
+        {
+            FileOptions.RegExPattern = regex;
+            return this;
+        }
+
+        public IRecursiveFileProcessor WithFolderRegexPattern(string regex)
+        {
+            FolderOptions.RegExPattern = regex;
+            return this;
+        }
+
+        public IRecursiveFileProcessor WithFileFilter(Predicate<FileSystemInfo> filter)
+        {
+            FileOptions.Filter = filter;
+            return this;
+        }
+
+        public IRecursiveFileProcessor WithFolderFilter(Predicate<FileSystemInfo> filter)
+        {
+            FileOptions.Filter = filter;
+            return this;
+        }
+
+        public IRecursiveFileProcessor WithFileAction(Action<FileSystemInfo> action)
+        {
+            FileAction = action;
+            return this;
+        }
+
+        public IRecursiveFileProcessor WithEnterFolderAction(Action<FileSystemInfo> action)
+        {
+            EnterFolderAction = action;
+            return this;
+        }
+
+        public IRecursiveFileProcessor WithExitFolderAction(Action<FileSystemInfo> action)
+        {
+            ExitFolderAction = action;
+            return this;
+        }
+        #endregion
+
         #region Properties
         public FindFilesOptions FileOptions { get; set; }
         public FindFilesOptions FolderOptions { get; set; }
 
-        public Action<FileSystemInfo> FileProcess { get; set; }
-        public Action<FileSystemInfo> EnterFolderProcess { get; set; }
-        public Action<FileSystemInfo> ExitFolderProcess { get; set; }
+        public Action<FileSystemInfo> FileAction { get; set; }
+        public Action<FileSystemInfo> EnterFolderAction { get; set; }
+        public Action<FileSystemInfo> ExitFolderAction { get; set; }
         #endregion
 
         public void DoProcess()
         {
             FindFilesRecursiveEnumerator enumerator = new FindFilesRecursiveEnumerator(FileOptions, FolderOptions);
-            enumerator.EnterFolder = EnterFolderProcess;
-            enumerator.ExitFolder = ExitFolderProcess;
+            enumerator.EnterFolder = EnterFolderAction;
+            enumerator.ExitFolder = ExitFolderAction;
 
             while (enumerator.MoveNext())
             {
-                FileProcess?.Invoke(enumerator.Current);
+                FileAction?.Invoke(enumerator.Current);
             }
         }
     }

@@ -22,9 +22,9 @@ namespace FileSystemUnitTests
 
             IList<string> listText = new List<string>();
 
-            process.FileProcess = (fsi) => {listText.Add($"{fsi.Name} {(fsi as FileInfo)?.Length}"); };
-            process.EnterFolderProcess = (fsi) => listText.Add($"Enter {fsi.FullName}");
-            process.ExitFolderProcess = (fsi) => listText.Add($"Exit {fsi.FullName}");
+            process.FileAction = (fsi) => {listText.Add($"{fsi.Name} {(fsi as FileInfo)?.Length}"); };
+            process.EnterFolderAction = (fsi) => listText.Add($"Enter {fsi.FullName}");
+            process.ExitFolderAction = (fsi) => listText.Add($"Exit {fsi.FullName}");
 
             process.DoProcess();
 
@@ -43,9 +43,9 @@ namespace FileSystemUnitTests
 
             IList<string> listText = new List<string>();
 
-            process.FileProcess = (fsi) => { listText.Add($"Delete {fsi.Name}"); fsi.Delete(); };
-            process.EnterFolderProcess = (fsi) => listText.Add($"Enter {fsi.Name}");
-            process.ExitFolderProcess = (fsi) => { listText.Add($"Exit {fsi.Name}"); fsi.Delete(); };
+            process.FileAction = (fsi) => { listText.Add($"Delete {fsi.Name}"); fsi.Delete(); };
+            process.EnterFolderAction = (fsi) => listText.Add($"Enter {fsi.Name}");
+            process.ExitFolderAction = (fsi) => { listText.Add($"Exit {fsi.Name}"); fsi.Delete(); };
 
             process.DoProcess();
 

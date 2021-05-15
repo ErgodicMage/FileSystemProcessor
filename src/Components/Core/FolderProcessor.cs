@@ -1,26 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace FileSystem
 {
-    public class FileProcessor : IFileSystemProcessor
+    public class FolderProcessor : IFileSystemProcessor
     {
         #region Constructors
-        public FileProcessor()
+        public FolderProcessor()
         {
             Options = new FindFilesOptions();
         }
 
-        public FileProcessor(string path)
+        public FolderProcessor(string path)
         {
             Options = new FindFilesOptions();
         }
 
-        public FileProcessor(FindFilesOptions options)
+        public FolderProcessor(FindFilesOptions options)
         {
             Options = options;
         }
-        public FileProcessor(string path, string pattern, bool recursive, string regexpattern = "", Predicate<FileSystemInfo> filter = null)
+        public FolderProcessor(string path, string pattern, bool recursive, string regexpattern = "", Predicate<FileSystemInfo> filter = null)
         {
             Options = new FindFilesOptions() { Path = path, Pattern = pattern, RegExPattern = regexpattern, Filter = filter, Recursive = recursive };
         }
@@ -79,7 +80,7 @@ namespace FileSystem
         #region Methods
         public virtual void DoProcess()
         {
-            FindFiles ff = new FindFiles(Options);
+            FindFolders ff = new FindFolders(Options);
 
             foreach (FileSystemInfo fsi in ff.Enumerate())
             {
@@ -90,3 +91,4 @@ namespace FileSystem
         #endregion
     }
 }
+
