@@ -24,9 +24,9 @@ namespace FileSystem
         FindFilesOptions FileOptions { get; set; }
         FindFilesOptions FolderOptions { get; set; }
 
-        Action<FileInfo> FileAction { get; set; }
-        Action<DirectoryInfo> EnterFolderAction { get; set; }
-        Action<DirectoryInfo> ExitFolderAction { get; set; }
+        Action<FileSystemInfo> FileAction { get; set; }
+        Action<FileSystemInfo> EnterFolderAction { get; set; }
+        Action<FileSystemInfo> ExitFolderAction { get; set; }
         #endregion
 
         void DoProcess();

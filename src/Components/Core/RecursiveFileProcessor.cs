@@ -115,9 +115,9 @@ namespace FileSystem
         public FindFilesOptions FileOptions { get; set; }
         public FindFilesOptions FolderOptions { get; set; }
 
-        public Action<FileInfo> FileAction { get; set; }
-        public Action<DirectoryInfo> EnterFolderAction { get; set; }
-        public Action<DirectoryInfo> ExitFolderAction { get; set; }
+        public Action<FileSystemInfo> FileAction { get; set; }
+        public Action<FileSystemInfo> EnterFolderAction { get; set; }
+        public Action<FileSystemInfo> ExitFolderAction { get; set; }
         #endregion
 
         public void DoProcess()
@@ -128,7 +128,7 @@ namespace FileSystem
 
             while (enumerator.MoveNext())
             {
-                FileAction?.Invoke(enumerator.Current as FileInfo);
+                FileAction?.Invoke(enumerator.Current);
             }
         }
     }
