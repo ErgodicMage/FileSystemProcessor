@@ -50,9 +50,9 @@ namespace FileSystem
         #endregion
 
         #region IEnumerator<FileSystemInfo>
-        public FileSystemInfo Current => CurrentFileEnumerator != null ? CurrentFileEnumerator.Current : null;
+        public FileSystemInfo Current => CurrentFileEnumerator.Current ?? null;
 
-        object IEnumerator.Current => CurrentFileEnumerator != null ? CurrentFileEnumerator.Current : null;
+        object IEnumerator.Current => CurrentFileEnumerator.Current ?? null;
 
 
         public void Dispose()
@@ -89,31 +89,25 @@ namespace FileSystem
 
         public void Reset()
         {
-            if (CurrentFileEnumerator != null)
-            {
-                CurrentFileEnumerator.Dispose();
-                CurrentFileEnumerator = null;
-            }
+            CurrentFileEnumerator?.Dispose();
+            CurrentFileEnumerator = null;
 
-            if (CurrentFolderEnumerator != null)
-            {
-                CurrentFolderEnumerator.Dispose();
-                CurrentFolderEnumerator = null;
-            }
+            CurrentFolderEnumerator?.Dispose();
+            CurrentFolderEnumerator = null;
+
 
             while (FolderStack.Count > 0)
             {
                 IEnumerator<FileSystemInfo> fsi = FolderStack.Pop();
-                if (fsi != null)
-                    fsi.Dispose();
+                fsi?.Dispose();
             }
         }
         #endregion
 
         #region Folder Stack Functions
-        protected bool FileMoveNext() => CurrentFileEnumerator != null ? CurrentFileEnumerator.MoveNext() : false;
+        protected bool FileMoveNext() => CurrentFileEnumerator?.MoveNext() == true;
 
-        protected bool FolderMoveNext() => CurrentFolderEnumerator != null ? CurrentFolderEnumerator.MoveNext() : false;
+        protected bool FolderMoveNext() => CurrentFolderEnumerator?.MoveNext() == true;
 
         private bool DrillDown()
         {
@@ -167,14 +161,13 @@ namespace FileSystem
         {
             if (CurrentFolderEnumerator != null)
             {
-                if (CurrentFolderEnumerator.Current != null && CurrentFolderEnumerator.Current is DirectoryInfo)
+                if (CurrentFolderEnumerator.Current is DirectoryInfo)
                     EnterFolder?.Invoke(CurrentFolderEnumerator.Current as DirectoryInfo);
                 FolderOptions.Path = CurrentFolderEnumerator.Current.FullName;
                 FolderStack.Push(CurrentFolderEnumerator);
             }
 
-            if (CurrentFileEnumerator != null)
-                CurrentFileEnumerator.Dispose();
+            CurrentFileEnumerator?.Dispose();
                 
             FileOptions.Path = FolderOptions.Path;
 
@@ -188,22 +181,16 @@ namespace FileSystem
 
         private void EndSubFolder()
         {
-            if (CurrentFileEnumerator != null)
-            {
-                CurrentFileEnumerator.Dispose();
-                CurrentFileEnumerator = null;
-            }
-
-            if (CurrentFolderEnumerator != null)
-            {                
-                CurrentFolderEnumerator.Dispose();
-                CurrentFolderEnumerator = null;
-            }
+            CurrentFileEnumerator?.Dispose();
+            CurrentFileEnumerator = null;
+         
+            CurrentFolderEnumerator?.Dispose();
+            CurrentFolderEnumerator = null;
 
             if (FolderStack.Count > 0)
             {
                 CurrentFolderEnumerator = FolderStack.Pop();
-                if (CurrentFolderEnumerator.Current != null && CurrentFolderEnumerator.Current is DirectoryInfo)
+                if (CurrentFolderEnumerator.Current is DirectoryInfo)
                     ExitFolder?.Invoke(CurrentFolderEnumerator.Current as DirectoryInfo);
             }
         }
