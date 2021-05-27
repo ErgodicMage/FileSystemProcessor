@@ -50,9 +50,9 @@ namespace FileSystem
         #endregion
 
         #region IEnumerator<FileSystemInfo>
-        public FileSystemInfo Current => CurrentFileEnumerator.Current ?? null;
+        public FileSystemInfo Current => CurrentFileEnumerator?.Current ?? null;
 
-        object IEnumerator.Current => CurrentFileEnumerator.Current ?? null;
+        object IEnumerator.Current => CurrentFileEnumerator?.Current ?? null;
 
 
         public void Dispose()

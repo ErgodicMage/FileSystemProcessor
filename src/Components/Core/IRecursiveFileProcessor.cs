@@ -3,7 +3,7 @@ using System.IO;
 
 namespace FileSystem
 {
-    public interface IRecursiveFileProcessor
+    public interface IRecursiveFileProcessor : IProcessor
     {
         #region FluentAPI
         IRecursiveFileProcessor WithFileOptions(FindFilesOptions options);
@@ -28,7 +28,5 @@ namespace FileSystem
         Action<DirectoryInfo> EnterFolderAction { get; set; }
         Action<DirectoryInfo> ExitFolderAction { get; set; }
         #endregion
-
-        void DoProcess();
     }
 }

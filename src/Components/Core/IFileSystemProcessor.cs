@@ -3,7 +3,7 @@ using System.IO;
 
 namespace FileSystem
 {
-    public interface IFileSystemProcessor
+    public interface IFileSystemProcessor : IProcessor
     {
         #region Fluent API
         IFileSystemProcessor WithOptions(FindFilesOptions options);
@@ -17,7 +17,6 @@ namespace FileSystem
 
         FindFilesOptions Options { get; set; }
         Action<FileSystemInfo> Action { get; set; }
-        void DoProcess();
 
     }
 }

@@ -88,7 +88,7 @@ namespace FileSystem
 
         public IRecursiveFileProcessor WithFolderFilter(Predicate<FileSystemInfo> filter)
         {
-            FileOptions.Filter = filter;
+            FolderOptions.Filter = filter;
             return this;
         }
 
