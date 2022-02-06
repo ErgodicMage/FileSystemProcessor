@@ -1,2 +1,2 @@
-cd "C:\Development\FileSystemProcessor"
-dir .\ -include bin,obj,_resharper*,packages,'.vs',TestResults -recurse | foreach($_) { rd $_.fullname –Recurse –Force}
+cd "C:\Development\EM\FileSystemProcessor"
+Get-ChildItem -include bin,obj,packages,'.vs',TestResults -Force -Recurse | foreach ($_) { remove-item $_.fullname -Force -Recurse -ErrorAction SilentlyContinue -Verbose}
