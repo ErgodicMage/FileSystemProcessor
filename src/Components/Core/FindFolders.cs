@@ -120,6 +120,8 @@ namespace FileSystem
                     .Where(file => regex.IsMatch(file.FullName) && Options.Filter(file));
             }
 
+            enumerable ??= Enumerable.Empty<FileSystemInfo>();
+
             return enumerable;
         }
         #endregion
