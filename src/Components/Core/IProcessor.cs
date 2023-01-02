@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace FileSystem;
 
-namespace FileSystem
+public interface IProcessor
 {
-    public interface IProcessor
-    {
-        void DoProcess();
-    }
+    void DoProcess();
 }

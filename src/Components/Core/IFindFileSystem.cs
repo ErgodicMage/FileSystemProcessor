@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿namespace FileSystem;
 
-namespace FileSystem
+public interface IFindFileSystem
 {
-    public interface IFindFileSystem
-    {
-        #region FluentAPI
-        IFindFileSystem WithOptions(FindFilesOptions options);
-        IFindFileSystem WithPath(string path);
-        IFindFileSystem WithPattern(string pattern);
-        IFindFileSystem WithRegexPattern(string regex);
-        IFindFileSystem Recursive();
-        IFindFileSystem WithFilter(Predicate<FileSystemInfo> filter);
+    #region FluentAPI
+    IFindFileSystem WithOptions(FindFilesOptions options);
+    IFindFileSystem WithPath(string path);
+    IFindFileSystem WithPattern(string pattern);
+    IFindFileSystem WithRegexPattern(string regex);
+    IFindFileSystem Recursive();
+    IFindFileSystem WithFilter(Predicate<FileSystemInfo> filter);
 
-        #endregion
+    #endregion
 
-        FindFilesOptions Options { get; set; }
-        IEnumerable<FileSystemInfo> Enumerate();
-    }
+    FindFilesOptions Options { get; set; }
+    IEnumerable<FileSystemInfo> Enumerate();
 }

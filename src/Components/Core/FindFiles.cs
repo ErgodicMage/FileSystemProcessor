@@ -1,129 +1,122 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿namespace FileSystem;
 
-namespace FileSystem
+public class FindFiles : IFindFileSystem
 {
-    public class FindFiles : IFindFileSystem
+    #region Constructors
+    public FindFiles()
     {
-        #region Constructors
-        public FindFiles()
-        {
-            Options = new FindFilesOptions();
-        }
-
-        public FindFiles(string path)
-        {
-            Options = new FindFilesOptions();
-            Options.Path = path;
-        }
-
-        public FindFiles(FindFilesOptions options)
-        {
-            Options = options;
-        }
-
-        public FindFiles(string path, string pattern, bool recursive, string regexpattern = "", Predicate<FileSystemInfo> filter = null)
-        {
-            Options = new FindFilesOptions() { Path = path, Pattern = pattern, RegExPattern = regexpattern, Filter = filter };
-            Options.Options = new EnumerationOptions() { RecurseSubdirectories = recursive };
-        }
-
-        #endregion
-
-        #region Fluent API
-        public IFindFileSystem WithOptions(FindFilesOptions options)
-        {
-            Options = options;
-            return this;
-        }
-
-        public IFindFileSystem WithPath(string path)
-        {
-            Options.Path = path;
-            return this;
-        }
-
-        public IFindFileSystem WithPattern(string pattern)
-        {
-            Options.Pattern = pattern;
-            return this;
-        }
-
-        public IFindFileSystem WithRegexPattern(string regex)
-        {
-            Options.RegExPattern = regex;
-            return this;            
-        }
-
-        public IFindFileSystem Recursive()
-        {
-            if (Options.Options == null)
-                Options.Options = new EnumerationOptions();
-            Options.Options.RecurseSubdirectories = true;
-            return this;            
-        }
-
-        public IFindFileSystem WithFilter(Predicate<FileSystemInfo> filter)
-        {
-            Options.Filter = filter;
-            return this;            
-        }
-        #endregion
-
-        #region Properties
-        public FindFilesOptions Options { get; set; }
-        #endregion
-
-        #region Public Methods
-        public IEnumerable<FileSystemInfo> Enumerate()
-        {
-            DirectoryInfo directoryinfo = new DirectoryInfo(Options.Path);
-
-            EnumerationOptions enumerationoptions = Options.Options;
-            if (enumerationoptions == null)
-            {
-                if (!Options.Recursive)
-                    enumerationoptions = FindFilesOptions.DefaultEnumerationOptions;
-                else
-                {
-                    enumerationoptions = new EnumerationOptions()
-                    {
-                        AttributesToSkip = FindFilesOptions.DefaultEnumerationOptions.AttributesToSkip,
-                        IgnoreInaccessible = FindFilesOptions.DefaultEnumerationOptions.IgnoreInaccessible,
-                        RecurseSubdirectories = true
-                    };
-                }
-            }
-
-            IEnumerable<FileSystemInfo> enumerable = null;
-
-            if (string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter == null)
-                enumerable = (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateFiles(Options.Pattern, enumerationoptions);
-            else if (!string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter == null)
-            {
-                Regex regex = new Regex(Options.RegExPattern, RegexOptions.Compiled);
-                enumerable = (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateFiles(Options.Pattern, enumerationoptions)
-                    .Where(file => regex.IsMatch(file.FullName));
-            }
-            else if (string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter != null)
-            {
-                enumerable = (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateFiles(Options.Pattern, enumerationoptions)
-                    .Where(file => Options.Filter(file));
-            }
-            else if (!string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter != null)
-            {
-                Regex regex = new Regex(Options.RegExPattern);
-                enumerable = (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateFiles(Options.Pattern, enumerationoptions)
-                    .Where(file => regex.IsMatch(file.FullName) && Options.Filter(file));
-            }
-
-            enumerable ??= Enumerable.Empty<FileSystemInfo>();
-
-            return enumerable;
-        }
-        #endregion
+        Options = new FindFilesOptions();
     }
+
+    public FindFiles(string path)
+    {
+        Options = new FindFilesOptions();
+        Options.Path = path;
+    }
+
+    public FindFiles(FindFilesOptions options)
+    {
+        Options = options;
+    }
+
+    public FindFiles(string path, string pattern, bool recursive, string regexpattern = "", Predicate<FileSystemInfo> filter = null)
+    {
+        Options = new FindFilesOptions() { Path = path, Pattern = pattern, RegExPattern = regexpattern, Filter = filter };
+        Options.Options = new EnumerationOptions() { RecurseSubdirectories = recursive };
+    }
+
+    #endregion
+
+    #region Fluent API
+    public IFindFileSystem WithOptions(FindFilesOptions options)
+    {
+        Options = options;
+        return this;
+    }
+
+    public IFindFileSystem WithPath(string path)
+    {
+        Options.Path = path;
+        return this;
+    }
+
+    public IFindFileSystem WithPattern(string pattern)
+    {
+        Options.Pattern = pattern;
+        return this;
+    }
+
+    public IFindFileSystem WithRegexPattern(string regex)
+    {
+        Options.RegExPattern = regex;
+        return this;            
+    }
+
+    public IFindFileSystem Recursive()
+    {
+        if (Options.Options == null)
+            Options.Options = new EnumerationOptions();
+        Options.Options.RecurseSubdirectories = true;
+        return this;            
+    }
+
+    public IFindFileSystem WithFilter(Predicate<FileSystemInfo> filter)
+    {
+        Options.Filter = filter;
+        return this;            
+    }
+    #endregion
+
+    #region Properties
+    public FindFilesOptions Options { get; set; }
+    #endregion
+
+    #region Public Methods
+    public IEnumerable<FileSystemInfo> Enumerate()
+    {
+        DirectoryInfo directoryinfo = new DirectoryInfo(Options.Path);
+
+        EnumerationOptions enumerationoptions = Options.Options;
+        if (enumerationoptions == null)
+        {
+            if (!Options.Recursive)
+                enumerationoptions = FindFilesOptions.DefaultEnumerationOptions;
+            else
+            {
+                enumerationoptions = new EnumerationOptions()
+                {
+                    AttributesToSkip = FindFilesOptions.DefaultEnumerationOptions.AttributesToSkip,
+                    IgnoreInaccessible = FindFilesOptions.DefaultEnumerationOptions.IgnoreInaccessible,
+                    RecurseSubdirectories = true
+                };
+            }
+        }
+
+        IEnumerable<FileSystemInfo> enumerable = null;
+
+        if (string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter == null)
+            enumerable = (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateFiles(Options.Pattern, enumerationoptions);
+        else if (!string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter == null)
+        {
+            Regex regex = new Regex(Options.RegExPattern, RegexOptions.Compiled);
+            enumerable = (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateFiles(Options.Pattern, enumerationoptions)
+                .Where(file => regex.IsMatch(file.FullName));
+        }
+        else if (string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter != null)
+        {
+            enumerable = (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateFiles(Options.Pattern, enumerationoptions)
+                .Where(file => Options.Filter(file));
+        }
+        else if (!string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter != null)
+        {
+            Regex regex = new Regex(Options.RegExPattern);
+            enumerable = (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateFiles(Options.Pattern, enumerationoptions)
+                .Where(file => regex.IsMatch(file.FullName) && Options.Filter(file));
+        }
+
+        enumerable ??= Enumerable.Empty<FileSystemInfo>();
+
+        return enumerable;
+    }
+    #endregion
 }

@@ -1,31 +1,24 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿namespace FileSystemUnitTests;
 
-using FileSystem;
-
-namespace FileSystemUnitTests
+[TestClass]
+public class FindFilesRecursiveTests
 {
-    [TestClass]
-    public class FindFilesRecursiveTests
+    public FindFilesRecursiveTests()
     {
-        public FindFilesRecursiveTests()
-        {
-            TestUtilities.LoadAppSettings();
-        }
+        TestUtilities.LoadAppSettings();
+    }
 
-        [TestMethod]
-        [TestCategory(TestCategories.FunctionalTest)]
-        public void FindFilesRecursiveTest()
-        {
-            IFindFileSystem ffr = new FindFilesRecursive()
-                                    .WithPath(TestUtilities.Config["ScanFolder"]);
+    [TestMethod]
+    [TestCategory(TestCategories.FunctionalTest)]
+    public void FindFilesRecursiveTest()
+    {
+        IFindFileSystem ffr = new FindFilesRecursive()
+                                .WithPath(TestUtilities.Config["ScanFolder"]);
 
-            IList<string> values = TestUtilities.RunEnumerationToList(ffr);
+        IList<string> values = TestUtilities.RunEnumerationToList(ffr);
 
-            TestUtilities.WriteToFile(TestUtilities.Config["FilesFileName"], values);
+        TestUtilities.WriteToFile(TestUtilities.Config["FilesFileName"], values);
 
-            Assert.IsTrue(File.Exists(TestUtilities.Config["FilesFileName"]));
-        }
+        Assert.IsTrue(File.Exists(TestUtilities.Config["FilesFileName"]));
     }
 }

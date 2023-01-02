@@ -1,199 +1,193 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿namespace FileSystem;
 
-namespace FileSystem
+public class FindFilesRecursiveEnumerable : IEnumerable<FileSystemInfo>
 {
-    public class FindFilesRecursiveEnumerable : IEnumerable<FileSystemInfo>
+    #region Constructor
+    public FindFilesRecursiveEnumerable(FindFilesOptions fileOptions, FindFilesOptions folderOptions)
     {
-        #region Constructor
-        public FindFilesRecursiveEnumerable(FindFilesOptions fileOptions, FindFilesOptions folderOptions)
-        {
-            FileOptions = fileOptions;
-            FolderOptions = folderOptions;
-        }
-        #endregion
+        FileOptions = fileOptions;
+        FolderOptions = folderOptions;
+    }
+    #endregion
 
 
-        #region Properties
-        public FindFilesOptions FileOptions { get; set; }
-        public FindFilesOptions FolderOptions { get; set; }
+    #region Properties
+    public FindFilesOptions FileOptions { get; set; }
+    public FindFilesOptions FolderOptions { get; set; }
 
-        public IEnumerator<FileSystemInfo> GetEnumerator() => new FindFilesRecursiveEnumerator(FileOptions, FolderOptions);
+    public IEnumerator<FileSystemInfo> GetEnumerator() => new FindFilesRecursiveEnumerator(FileOptions, FolderOptions);
 
-        IEnumerator IEnumerable.GetEnumerator() => new FindFilesRecursiveEnumerator(FileOptions, FolderOptions);
-        #endregion
+    IEnumerator IEnumerable.GetEnumerator() => new FindFilesRecursiveEnumerator(FileOptions, FolderOptions);
+    #endregion
+}
+
+public class FindFilesRecursiveEnumerator : IEnumerator<FileSystemInfo>
+{
+    #region Constructor
+    public FindFilesRecursiveEnumerator(FindFilesOptions fileOptions, FindFilesOptions folderOptions)
+    {
+        FileOptions = fileOptions;
+        FolderOptions = folderOptions;
+        FolderStack = new Stack<IEnumerator<FileSystemInfo>>();
+    }
+    #endregion
+
+    #region Properties
+    public FindFilesOptions FileOptions { get; set; }
+    public FindFilesOptions FolderOptions { get; set; }
+    public Action<DirectoryInfo> EnterFolder { get; set; }
+    public Action<DirectoryInfo> ExitFolder { get; set; }
+
+    protected IEnumerator<FileSystemInfo> CurrentFileEnumerator { get; private set; }
+    protected IEnumerator<FileSystemInfo> CurrentFolderEnumerator { get; private set; }
+
+    protected Stack<IEnumerator<FileSystemInfo>> FolderStack { get; set; }
+    #endregion
+
+    #region IEnumerator<FileSystemInfo>
+    public FileSystemInfo Current => CurrentFileEnumerator?.Current ?? null;
+
+    object IEnumerator.Current => CurrentFileEnumerator?.Current ?? null;
+
+
+    public void Dispose()
+    {
+        Reset();
     }
 
-    public class FindFilesRecursiveEnumerator : IEnumerator<FileSystemInfo>
+    public bool MoveNext()
     {
-        #region Constructor
-        public FindFilesRecursiveEnumerator(FindFilesOptions fileOptions, FindFilesOptions folderOptions)
+        if (CurrentFolderEnumerator == null)
+            StartSubFolder();
+
+        if (FileMoveNext())
+            return true;
+
+        bool keepGoing = false;
+
+        if (FolderMoveNext())
         {
-            FileOptions = fileOptions;
-            FolderOptions = folderOptions;
-            FolderStack = new Stack<IEnumerator<FileSystemInfo>>();
+            StartSubFolder();
+            if (!FileMoveNext())
+                keepGoing = DrillDown();
+            else
+                keepGoing = true;
         }
-        #endregion
+        else
+            keepGoing = GoBackUp();
 
-        #region Properties
-        public FindFilesOptions FileOptions { get; set; }
-        public FindFilesOptions FolderOptions { get; set; }
-        public Action<DirectoryInfo> EnterFolder { get; set; }
-        public Action<DirectoryInfo> ExitFolder { get; set; }
+        if (keepGoing && CurrentFileEnumerator.Current is null)
+            keepGoing = false;
 
-        protected IEnumerator<FileSystemInfo> CurrentFileEnumerator { get; private set; }
-        protected IEnumerator<FileSystemInfo> CurrentFolderEnumerator { get; private set; }
+        return keepGoing;
+    }
 
-        protected Stack<IEnumerator<FileSystemInfo>> FolderStack { get; set; }
-        #endregion
+    public void Reset()
+    {
+        CurrentFileEnumerator?.Dispose();
+        CurrentFileEnumerator = null;
 
-        #region IEnumerator<FileSystemInfo>
-        public FileSystemInfo Current => CurrentFileEnumerator?.Current ?? null;
-
-        object IEnumerator.Current => CurrentFileEnumerator?.Current ?? null;
+        CurrentFolderEnumerator?.Dispose();
+        CurrentFolderEnumerator = null;
 
 
-        public void Dispose()
+        while (FolderStack.Count > 0)
         {
-            Reset();
+            IEnumerator<FileSystemInfo> fsi = FolderStack.Pop();
+            fsi?.Dispose();
         }
+    }
+    #endregion
 
-        public bool MoveNext()
+    #region Folder Stack Functions
+    protected bool FileMoveNext() => CurrentFileEnumerator?.MoveNext() == true;
+
+    protected bool FolderMoveNext() => CurrentFolderEnumerator?.MoveNext() == true;
+
+    private bool DrillDown()
+    {
+        bool keepGoing = false;
+
+        do
         {
-            if (CurrentFolderEnumerator == null)
-                StartSubFolder();
-
-            if (FileMoveNext())
-                return true;
-
-            bool keepGoing = false;
-
             if (FolderMoveNext())
             {
                 StartSubFolder();
-                if (!FileMoveNext())
-                    keepGoing = DrillDown();
-                else
-                    keepGoing = true;
+                keepGoing = FileMoveNext();
             }
-            else
+            else if (FolderStack.Count > 0)
                 keepGoing = GoBackUp();
+            else
+                break;
+        } while (!keepGoing);
 
-            if (keepGoing && CurrentFileEnumerator.Current == null)
-                keepGoing = false;
+        return keepGoing;
+    }
 
-            return keepGoing;
-        }
+    private bool GoBackUp()
+    {
+        bool keepGoing = false;
 
-        public void Reset()
+        do
         {
-            CurrentFileEnumerator?.Dispose();
-            CurrentFileEnumerator = null;
-
-            CurrentFolderEnumerator?.Dispose();
-            CurrentFolderEnumerator = null;
-
-
-            while (FolderStack.Count > 0)
-            {
-                IEnumerator<FileSystemInfo> fsi = FolderStack.Pop();
-                fsi?.Dispose();
-            }
-        }
-        #endregion
-
-        #region Folder Stack Functions
-        protected bool FileMoveNext() => CurrentFileEnumerator?.MoveNext() == true;
-
-        protected bool FolderMoveNext() => CurrentFolderEnumerator?.MoveNext() == true;
-
-        private bool DrillDown()
-        {
-            bool keepGoing = false;
-
-            do
+            EndSubFolder();
+            if (CurrentFolderEnumerator is not null)
             {
                 if (FolderMoveNext())
                 {
                     StartSubFolder();
                     keepGoing = FileMoveNext();
+                    if (!keepGoing)
+                        keepGoing = DrillDown();
                 }
-                else if (FolderStack.Count > 0)
-                    keepGoing = GoBackUp();
-                else
-                    break;
-            } while (!keepGoing);
 
-            return keepGoing;
-        }
-
-        private bool GoBackUp()
-        {
-            bool keepGoing = false;
-
-            do
-            {
-                EndSubFolder();
-                if (CurrentFolderEnumerator != null)
-                {
-                    if (FolderMoveNext())
-                    {
-                        StartSubFolder();
-                        keepGoing = FileMoveNext();
-                        if (!keepGoing)
-                            keepGoing = DrillDown();
-                    }
-
-                    //else
-                    //    keepGoing = DrillDown();
-                }
-            } while (!keepGoing && FolderStack.Count != 0);
-
-            if (FolderStack.Count == 0)
-                keepGoing = false;
-
-            return keepGoing;
-        }
-
-        private void StartSubFolder()
-        {
-            if (CurrentFolderEnumerator != null)
-            {
-                if (CurrentFolderEnumerator.Current is DirectoryInfo)
-                    EnterFolder?.Invoke(CurrentFolderEnumerator.Current as DirectoryInfo);
-                FolderOptions.Path = CurrentFolderEnumerator.Current.FullName;
-                FolderStack.Push(CurrentFolderEnumerator);
+                //else
+                //    keepGoing = DrillDown();
             }
+        } while (!keepGoing && FolderStack.Count != 0);
 
-            CurrentFileEnumerator?.Dispose();
-                
-            FileOptions.Path = FolderOptions.Path;
+        if (FolderStack.Count == 0)
+            keepGoing = false;
 
-            FindFolders findFolder = new FindFolders(FolderOptions);
-            CurrentFolderEnumerator = findFolder.Enumerate().GetEnumerator();
-
-            FindFiles findFiles = new FindFiles(FileOptions);
-            CurrentFileEnumerator = findFiles.Enumerate().GetEnumerator();
-
-        }
-
-        private void EndSubFolder()
-        {
-            CurrentFileEnumerator?.Dispose();
-            CurrentFileEnumerator = null;
-         
-            CurrentFolderEnumerator?.Dispose();
-            CurrentFolderEnumerator = null;
-
-            if (FolderStack.Count > 0)
-            {
-                CurrentFolderEnumerator = FolderStack.Pop();
-                if (CurrentFolderEnumerator.Current is DirectoryInfo)
-                    ExitFolder?.Invoke(CurrentFolderEnumerator.Current as DirectoryInfo);
-            }
-        }
-        #endregion
+        return keepGoing;
     }
+
+    private void StartSubFolder()
+    {
+        if (CurrentFolderEnumerator != null)
+        {
+            if (CurrentFolderEnumerator.Current is DirectoryInfo)
+                EnterFolder?.Invoke(CurrentFolderEnumerator.Current as DirectoryInfo);
+            FolderOptions.Path = CurrentFolderEnumerator.Current.FullName;
+            FolderStack.Push(CurrentFolderEnumerator);
+        }
+
+        CurrentFileEnumerator?.Dispose();
+            
+        FileOptions.Path = FolderOptions.Path;
+
+        FindFolders findFolder = new FindFolders(FolderOptions);
+        CurrentFolderEnumerator = findFolder.Enumerate().GetEnumerator();
+
+        FindFiles findFiles = new FindFiles(FileOptions);
+        CurrentFileEnumerator = findFiles.Enumerate().GetEnumerator();
+
+    }
+
+    private void EndSubFolder()
+    {
+        CurrentFileEnumerator?.Dispose();
+        CurrentFileEnumerator = null;
+     
+        CurrentFolderEnumerator?.Dispose();
+        CurrentFolderEnumerator = null;
+
+        if (FolderStack.Count > 0)
+        {
+            CurrentFolderEnumerator = FolderStack.Pop();
+            if (CurrentFolderEnumerator.Current is DirectoryInfo)
+                ExitFolder?.Invoke(CurrentFolderEnumerator.Current as DirectoryInfo);
+        }
+    }
+    #endregion
 }
