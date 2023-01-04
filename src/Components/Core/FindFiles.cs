@@ -1,4 +1,4 @@
-﻿namespace FileSystem;
+﻿namespace FileSystemProcessor;
 
 public class FindFiles : IFindFileSystem
 {
