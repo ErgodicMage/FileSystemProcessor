@@ -5,5 +5,5 @@ global using System.Linq;
 
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-global using FileSystemProcessor;
+global using ErgodicMage.FileSystemProcessor;
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using ErgodicMage.FileSystemProcessor;
+using Microsoft.Extensions.Configuration;
 
 namespace FileSystemUnitTests;
 

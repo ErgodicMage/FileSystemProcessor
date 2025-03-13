@@ -1,4 +1,4 @@
-﻿namespace FileSystemProcessor;
+﻿namespace ErgodicMage.FileSystemProcessor;
 
 public class FindFilesRecursiveEnumerable : IEnumerable<FileSystemInfo>
 {
