@@ -23,13 +23,8 @@ public static class TestUtilities
     #endregion
 
     #region Process Functionality
-    public static IList<string> RunEnumerationToList(IFindFileSystem ffs)
-    {
-        IList<string> values = new List<string>();
-        foreach (var f in ffs.Enumerate())
-            values.Add(f.FullName);
-        return values;
-    }
+    public static IList<string> RunEnumerationToList(IFindFileSystem ffs) => 
+        ffs.Enumerate().Select(f => f.FullName).ToList();
     #endregion
 
     #region Filters

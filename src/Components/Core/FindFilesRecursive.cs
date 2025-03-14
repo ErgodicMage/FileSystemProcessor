@@ -11,29 +11,37 @@ public class FindFilesRecursive : IFindFileSystem
     
     public FindFilesRecursive(string path)
     {
-        Options = new FindFilesOptions();
-        Options.Path = path;
-        Options.Recursive = false;
-        FolderOptions = new FindFilesOptions();
-        FolderOptions.Path = path;
-        FolderOptions.Recursive = false;
+        Options = new FindFilesOptions
+        {
+            Path = path,
+            Recursive = false
+        };
+        FolderOptions = new FindFilesOptions
+        {
+            Path = path,
+            Recursive = false
+        };
     }
 
     public FindFilesRecursive(FindFilesOptions options)
     {
         Options = options;
         Options.Recursive = false;
-        FolderOptions = new FindFilesOptions();
-        FolderOptions.Path = Options.Path;
-        FolderOptions.Recursive = false;
+        FolderOptions = new FindFilesOptions
+        {
+            Path = Options.Path,
+            Recursive = false
+        };
     }
 
-    public FindFilesRecursive(string path, string pattern, string regexpattern = "", Predicate<FileSystemInfo> filter = null)
+    public FindFilesRecursive(string path, string pattern, string regexpattern = "", Predicate<FileSystemInfo>? filter = null)
     {
         Options = new FindFilesOptions() { Path = path, Pattern = pattern, Recursive=false, RegExPattern = regexpattern, Filter = filter };
-        FolderOptions = new FindFilesOptions();
-        FolderOptions.Path = Options.Path;
-        FolderOptions.Recursive = false;
+        FolderOptions = new FindFilesOptions
+        {
+            Path = Options.Path,
+            Recursive = false
+        };
     }
     #endregion
 

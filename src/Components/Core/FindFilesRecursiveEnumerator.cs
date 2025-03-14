@@ -35,19 +35,19 @@ public class FindFilesRecursiveEnumerator : IEnumerator<FileSystemInfo>
     #region Properties
     public FindFilesOptions FileOptions { get; set; }
     public FindFilesOptions FolderOptions { get; set; }
-    public Action<DirectoryInfo> EnterFolder { get; set; }
-    public Action<DirectoryInfo> ExitFolder { get; set; }
+    public Action<DirectoryInfo>? EnterFolder { get; set; }
+    public Action<DirectoryInfo>? ExitFolder { get; set; }
 
-    protected IEnumerator<FileSystemInfo> CurrentFileEnumerator { get; private set; }
-    protected IEnumerator<FileSystemInfo> CurrentFolderEnumerator { get; private set; }
+    protected IEnumerator<FileSystemInfo>? CurrentFileEnumerator { get; private set; }
+    protected IEnumerator<FileSystemInfo>? CurrentFolderEnumerator { get; private set; }
 
     protected Stack<IEnumerator<FileSystemInfo>> FolderStack { get; set; }
     #endregion
 
     #region IEnumerator<FileSystemInfo>
-    public FileSystemInfo Current => CurrentFileEnumerator?.Current ?? null;
+    public FileSystemInfo Current => (CurrentFileEnumerator?.Current ?? null)!;
 
-    object IEnumerator.Current => CurrentFileEnumerator?.Current ?? null;
+    object IEnumerator.Current => (CurrentFileEnumerator?.Current ?? null)!;
 
 
     public void Dispose()
@@ -76,7 +76,7 @@ public class FindFilesRecursiveEnumerator : IEnumerator<FileSystemInfo>
         else
             keepGoing = GoBackUp();
 
-        if (keepGoing && CurrentFileEnumerator.Current is null)
+        if (keepGoing && CurrentFileEnumerator?.Current is null)
             keepGoing = false;
 
         return keepGoing;
@@ -93,7 +93,7 @@ public class FindFilesRecursiveEnumerator : IEnumerator<FileSystemInfo>
 
         while (FolderStack.Count > 0)
         {
-            IEnumerator<FileSystemInfo> fsi = FolderStack.Pop();
+            IEnumerator<FileSystemInfo>? fsi = FolderStack.Pop();
             fsi?.Dispose();
         }
     }
@@ -157,7 +157,7 @@ public class FindFilesRecursiveEnumerator : IEnumerator<FileSystemInfo>
         if (CurrentFolderEnumerator != null)
         {
             if (CurrentFolderEnumerator.Current is DirectoryInfo)
-                EnterFolder?.Invoke(CurrentFolderEnumerator.Current as DirectoryInfo);
+                EnterFolder?.Invoke((CurrentFolderEnumerator.Current as DirectoryInfo)!);
             FolderOptions.Path = CurrentFolderEnumerator.Current.FullName;
             FolderStack.Push(CurrentFolderEnumerator);
         }
@@ -186,7 +186,7 @@ public class FindFilesRecursiveEnumerator : IEnumerator<FileSystemInfo>
         {
             CurrentFolderEnumerator = FolderStack.Pop();
             if (CurrentFolderEnumerator.Current is DirectoryInfo)
-                ExitFolder?.Invoke(CurrentFolderEnumerator.Current as DirectoryInfo);
+                ExitFolder?.Invoke((CurrentFolderEnumerator.Current as DirectoryInfo)!);
         }
     }
     #endregion

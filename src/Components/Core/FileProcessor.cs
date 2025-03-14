@@ -3,6 +3,7 @@
 public class FileProcessor : IFileSystemProcessor
 {
     #region Constructors
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     public FileProcessor()
     {
         Options = new FindFilesOptions();
@@ -18,10 +19,11 @@ public class FileProcessor : IFileSystemProcessor
         Options = options;
     }
 
-    public FileProcessor(string path, string pattern, bool recursive, string regexpattern = "", Predicate<FileSystemInfo> filter = null)
+    public FileProcessor(string path, string pattern, bool recursive, string regexpattern = "", Predicate<FileSystemInfo>? filter = null)
     {
         Options = new FindFilesOptions() { Path = path, Pattern = pattern, RegExPattern = regexpattern, Filter = filter, Recursive = recursive };
     }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     #endregion
 
     #region Fluent API
@@ -71,7 +73,7 @@ public class FileProcessor : IFileSystemProcessor
     #region Properties
     public FindFilesOptions Options { get; set; }
 
-    public Action<FileSystemInfo> Action { get; set; }
+    public Action<FileSystemInfo>? Action { get; set; }
     #endregion
 
     #region Methods

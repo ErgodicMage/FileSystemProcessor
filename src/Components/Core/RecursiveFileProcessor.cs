@@ -10,12 +10,16 @@ public class RecursiveFileProcessor : IRecursiveFileProcessor
     }
     public RecursiveFileProcessor(string path)
     {
-        FileOptions = new FindFilesOptions();
-        FileOptions.Path = path;
-        FileOptions.Recursive = false;
-        FolderOptions = new FindFilesOptions();
-        FolderOptions.Path = path;
-        FolderOptions.Recursive = false;
+        FileOptions = new FindFilesOptions
+        {
+            Path = path,
+            Recursive = false
+        };
+        FolderOptions = new FindFilesOptions
+        {
+            Path = path,
+            Recursive = false
+        };
     }
     public RecursiveFileProcessor(FindFilesOptions fileOptions, FindFilesOptions folderOptions)
     {
@@ -23,13 +27,16 @@ public class RecursiveFileProcessor : IRecursiveFileProcessor
         FolderOptions = folderOptions;
     }
 
-    public RecursiveFileProcessor(string path, string pattern, string regexpattern = "", Predicate<FileSystemInfo> filefilter = null, Predicate<FileSystemInfo> folderfilter = null)
+    public RecursiveFileProcessor(string path, string pattern, string regexpattern = "", Predicate<FileSystemInfo>? filefilter = null, 
+        Predicate<FileSystemInfo>? folderfilter = null)
     {
-        FileOptions = new FindFilesOptions() { Path = path, Pattern = pattern, Recursive = false, RegExPattern = regexpattern, Filter = filefilter };
-        FolderOptions = new FindFilesOptions();
-        FolderOptions.Path = FileOptions.Path;
-        FolderOptions.Recursive = false;
-        FolderOptions.Filter = folderfilter;
+        FileOptions = new() { Path = path, Pattern = pattern, Recursive = false, RegExPattern = regexpattern, Filter = filefilter };
+        FolderOptions = new FindFilesOptions
+        {
+            Path = FileOptions.Path,
+            Recursive = false,
+            Filter = folderfilter
+        };
     }
     #endregion
 
@@ -111,20 +118,22 @@ public class RecursiveFileProcessor : IRecursiveFileProcessor
     public FindFilesOptions FileOptions { get; set; }
     public FindFilesOptions FolderOptions { get; set; }
 
-    public Action<FileInfo> FileAction { get; set; }
-    public Action<DirectoryInfo> EnterFolderAction { get; set; }
-    public Action<DirectoryInfo> ExitFolderAction { get; set; }
+    public Action<FileInfo>? FileAction { get; set; }
+    public Action<DirectoryInfo>? EnterFolderAction { get; set; }
+    public Action<DirectoryInfo>? ExitFolderAction { get; set; }
     #endregion
 
     public void DoProcess()
     {
-        FindFilesRecursiveEnumerator enumerator = new FindFilesRecursiveEnumerator(FileOptions, FolderOptions);
-        enumerator.EnterFolder = EnterFolderAction;
-        enumerator.ExitFolder = ExitFolderAction;
+        FindFilesRecursiveEnumerator enumerator = new(FileOptions, FolderOptions)
+        {
+            EnterFolder = EnterFolderAction,
+            ExitFolder = ExitFolderAction
+        };
 
         while (enumerator.MoveNext())
         {
-            FileAction?.Invoke(enumerator.Current as FileInfo);
+            FileAction?.Invoke((enumerator.Current as FileInfo)!);
         }
     }
 }

@@ -10,8 +10,10 @@ public class FindFolders : IFindFileSystem
 
     public FindFolders(string path)
     {
-        Options = new FindFilesOptions();
-        Options.Path = path;
+        Options = new FindFilesOptions
+        {
+            Path = path
+        };
     }
 
     public FindFolders(FindFilesOptions options)
@@ -19,10 +21,16 @@ public class FindFolders : IFindFileSystem
         Options = options;
     }
 
-    public FindFolders(string path, string pattern, bool recursive, string regexpattern = "", Predicate<FileSystemInfo> filter = null)
+    public FindFolders(string path, string pattern, bool recursive, string regexpattern = "", Predicate<FileSystemInfo>? filter = null)
     {
-        Options = new FindFilesOptions() { Path = path, Pattern = pattern, RegExPattern = regexpattern, Filter = filter };
-        Options.Options = new EnumerationOptions() { RecurseSubdirectories = recursive };
+        Options = new FindFilesOptions
+        {
+            Path = path,
+            Pattern = pattern,
+            RegExPattern = regexpattern,
+            Filter = filter,
+            Options = new EnumerationOptions() { RecurseSubdirectories = recursive }
+        };
 
     }
     #endregion
@@ -75,49 +83,42 @@ public class FindFolders : IFindFileSystem
     #region Public Functions
     public IEnumerable<FileSystemInfo> Enumerate()
     {
-        DirectoryInfo directoryinfo = new DirectoryInfo(Options.Path);
-
-        EnumerationOptions enumerationoptions = Options.Options;
-        if (enumerationoptions == null)
+        EnumerationOptions enumerationoptions = Options.Options ?? FindFilesOptions.DefaultEnumerationOptions;
+        if (Options.Recursive)
         {
-            if (!Options.Recursive)
-                enumerationoptions = FindFilesOptions.DefaultEnumerationOptions;
-            else
+            enumerationoptions = new EnumerationOptions()
             {
-                enumerationoptions = new EnumerationOptions()
-                {
-                    AttributesToSkip = FindFilesOptions.DefaultEnumerationOptions.AttributesToSkip,
-                    IgnoreInaccessible = FindFilesOptions.DefaultEnumerationOptions.IgnoreInaccessible,
-                    RecurseSubdirectories = true
-                };
-            }
+                AttributesToSkip = FindFilesOptions.DefaultEnumerationOptions.AttributesToSkip,
+                IgnoreInaccessible = FindFilesOptions.DefaultEnumerationOptions.IgnoreInaccessible,
+                RecurseSubdirectories = true
+            };
         }
 
-        IEnumerable<FileSystemInfo> enumerable = null;
+        DirectoryInfo directoryinfo = new(Options.Path ?? string.Empty);
+        string pattern = Options.Pattern ?? string.Empty;
+
 
         if (string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter == null)
-            enumerable = (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateDirectories(Options.Pattern, enumerationoptions);
+            return (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateDirectories(pattern, enumerationoptions);
         else if (!string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter == null)
         {
-            Regex regex = new Regex(Options.RegExPattern, RegexOptions.Compiled);
-            enumerable = (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateDirectories(Options.Pattern, enumerationoptions)
+            Regex regex = new(Options.RegExPattern, RegexOptions.Compiled);
+            return (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateDirectories(pattern, enumerationoptions)
                 .Where(file => regex.IsMatch(file.FullName));
         }
         else if (string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter != null)
         {
-            enumerable = (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateDirectories(Options.Pattern, enumerationoptions)
+            return (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateDirectories(pattern, enumerationoptions)
                 .Where(file => Options.Filter(file));
         }
         else if (!string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter != null)
         {
-            Regex regex = new Regex(Options.RegExPattern);
-            enumerable = (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateDirectories(Options.Pattern, enumerationoptions)
+            Regex regex = new(Options.RegExPattern);
+            return (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateDirectories(pattern, enumerationoptions)
                 .Where(file => regex.IsMatch(file.FullName) && Options.Filter(file));
         }
 
-        enumerable ??= Enumerable.Empty<FileSystemInfo>();
-
-        return enumerable;
+        return Enumerable.Empty<FileSystemInfo>();
     }
     #endregion
 }

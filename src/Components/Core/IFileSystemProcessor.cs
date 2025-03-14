@@ -13,6 +13,6 @@ public interface IFileSystemProcessor : IProcessor
     #endregion
 
     FindFilesOptions Options { get; set; }
-    Action<FileSystemInfo> Action { get; set; }
+    Action<FileSystemInfo>? Action { get; set; }
 
 }

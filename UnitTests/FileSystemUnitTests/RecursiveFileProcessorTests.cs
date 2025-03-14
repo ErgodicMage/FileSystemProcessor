@@ -12,9 +12,9 @@ public class RecursiveFileProcessorTests
     [TestCategory(TestCategories.FunctionalTest)]
     public void RecursiveListFilesFoldersTest()
     {
-        RecursiveFileProcessor process = new RecursiveFileProcessor(TestUtilities.Config["ScanFolder"]);
+        RecursiveFileProcessor process = new(TestUtilities.Config["ScanFolder"]);
 
-        IList<string> listText = new List<string>();
+        List<string> listText = new();
 
         process.FileAction = (fi) => {listText.Add($"{fi.Name} {fi.Length}"); };
         process.EnterFolderAction = (di) => listText.Add($"Enter {di.FullName}");
@@ -31,11 +31,11 @@ public class RecursiveFileProcessorTests
     [TestCategory(TestCategories.FunctionalTest)]
     public void DoDeleteMeTest()
     {
-        RecursiveFileProcessor process = new RecursiveFileProcessor(TestUtilities.Config["ScanFolder"]);
+        RecursiveFileProcessor process = new(TestUtilities.Config["ScanFolder"]);
         process.FileOptions.Filter = (fsi) => fsi.Name.EndsWith("DeleteMe.txt", System.StringComparison.OrdinalIgnoreCase);
         process.FolderOptions.Filter = (fsi) => fsi.Name.Contains("DeleteMe", System.StringComparison.OrdinalIgnoreCase);
 
-        IList<string> listText = new List<string>();
+        List<string> listText = new();
 
         process.FileAction = (fi) => { listText.Add($"Delete {fi.Name}"); fi.Delete(); };
         process.EnterFolderAction = (di) => listText.Add($"Enter {di.Name}");

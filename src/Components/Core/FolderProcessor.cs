@@ -3,6 +3,7 @@
 public class FolderProcessor : IFileSystemProcessor
 {
     #region Constructors
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     public FolderProcessor()
     {
         Options = new FindFilesOptions();
@@ -17,10 +18,12 @@ public class FolderProcessor : IFileSystemProcessor
     {
         Options = options;
     }
-    public FolderProcessor(string path, string pattern, bool recursive, string regexpattern = "", Predicate<FileSystemInfo> filter = null)
+
+    public FolderProcessor(string path, string pattern, bool recursive, string regexpattern = "", Predicate<FileSystemInfo>? filter = null)
     {
         Options = new FindFilesOptions() { Path = path, Pattern = pattern, RegExPattern = regexpattern, Filter = filter, Recursive = recursive };
     }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     #endregion
 
     #region Fluent API
@@ -70,13 +73,13 @@ public class FolderProcessor : IFileSystemProcessor
     #region Properties
     public FindFilesOptions Options { get; set; }
 
-    public Action<FileSystemInfo> Action { get; set; }
+    public Action<FileSystemInfo>? Action { get; set; }
     #endregion
 
     #region Methods
     public virtual void DoProcess()
     {
-        FindFolders ff = new FindFolders(Options);
+        FindFolders ff = new(Options);
 
         foreach (FileSystemInfo fsi in ff.Enumerate())
         {
