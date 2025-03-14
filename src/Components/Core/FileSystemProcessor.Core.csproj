@@ -26,8 +26,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\ErgodicMage.jpg" Pack="true" PackagePath="" />
-    <None Include="..\..\README.md" Pack="true" PackagePath="" />
+    <None Include="..\..\..\ErgodicMage.jpg" Pack="true" PackagePath="" />
+    <None Include="..\..\..\README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>
