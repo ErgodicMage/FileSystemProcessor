@@ -20,7 +20,7 @@ public class RecursiveFileProcessorTests
         process.EnterFolderAction = (di) => listText.Add($"Enter {di.FullName}");
         process.ExitFolderAction = (di) => listText.Add($"Exit {di.FullName}");
 
-        process.DoProcess();
+        process.Run();
 
         TestUtilities.WriteToFile(TestUtilities.Config["FilesFileName"], listText);
 
@@ -41,7 +41,7 @@ public class RecursiveFileProcessorTests
         process.EnterFolderAction = (di) => listText.Add($"Enter {di.Name}");
         process.ExitFolderAction = (di) => { listText.Add($"Exit {di.Name}"); di.Delete(); };
 
-        process.DoProcess();
+        process.Run();
 
         TestUtilities.WriteToFile(TestUtilities.Config["FilesFileName"], listText);
 

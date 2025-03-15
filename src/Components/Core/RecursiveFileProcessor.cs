@@ -123,7 +123,9 @@ public class RecursiveFileProcessor : IRecursiveFileProcessor
     public Action<DirectoryInfo>? ExitFolderAction { get; set; }
     #endregion
 
-    public void DoProcess()
+    public virtual void Run() => DoProcess();
+    
+    public virtual void DoProcess()
     {
         FindFilesRecursiveEnumerator enumerator = new(FileOptions, FolderOptions)
         {

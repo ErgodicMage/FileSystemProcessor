@@ -77,6 +77,8 @@ public class FileProcessor : IFileSystemProcessor
     #endregion
 
     #region Methods
+    public virtual void Run() => DoProcess();
+
     public virtual void DoProcess()
     {
         FindFiles ff = new(Options);
