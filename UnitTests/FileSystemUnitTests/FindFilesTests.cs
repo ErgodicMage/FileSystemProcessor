@@ -104,7 +104,7 @@ public class FindFilesTests
     [TestCategory(TestCategories.FunctionalTest)]
     public void FindFilesFilterPDF1MBTest()
     {
-        FindFilesOptions options = new FindFilesOptions() 
+        FindFilesOptions options = new() 
         { 
             Path = TestUtilities.Config["ScanFolder"], 
             Pattern = "*", 

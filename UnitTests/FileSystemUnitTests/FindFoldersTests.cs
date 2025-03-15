@@ -76,7 +76,7 @@ public class FindFoldersTests
     [TestCategory(TestCategories.FunctionalTest)]
     public void FindDirectoriesFilterIsFileSystemProcessorOrStellarMapTest()
     {
-        FindFilesOptions options = new FindFilesOptions() 
+        FindFilesOptions options = new() 
         {
             Path = TestUtilities.Config["ScanFolder"], 
             Pattern = "*", 
@@ -100,7 +100,7 @@ public class FindFoldersTests
     [TestCategory(TestCategories.FunctionalTest)]
     public void FindDirectoriesQRCodesTest()
     {
-        FindFilesOptions options = new FindFilesOptions() 
+        FindFilesOptions options = new() 
         { 
             Path = TestUtilities.Config["ScanFolder"], 
             Pattern = "*", 

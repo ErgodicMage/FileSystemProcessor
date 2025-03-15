@@ -11,7 +11,7 @@ public class FileProcessor : IFileSystemProcessor
 
     public FileProcessor(string path)
     {
-        Options = new FindFilesOptions();
+        Options = new FindFilesOptions() { Path = path };
     }
 
     public FileProcessor(FindFilesOptions options)
@@ -79,7 +79,7 @@ public class FileProcessor : IFileSystemProcessor
     #region Methods
     public virtual void DoProcess()
     {
-        FindFiles ff = new FindFiles(Options);
+        FindFiles ff = new(Options);
 
         foreach (FileSystemInfo fsi in ff.Enumerate())
         {

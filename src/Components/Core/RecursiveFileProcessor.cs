@@ -85,13 +85,13 @@ public class RecursiveFileProcessor : IRecursiveFileProcessor
 
     public IRecursiveFileProcessor WithFileFilter(Predicate<FileSystemInfo> filter)
     {
-        FileOptions.Filter = filter;
+        FileOptions.Filter += filter;
         return this;
     }
 
     public IRecursiveFileProcessor WithFolderFilter(Predicate<FileSystemInfo> filter)
     {
-        FolderOptions.Filter = filter;
+        FolderOptions.Filter += filter;
         return this;
     }
 

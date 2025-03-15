@@ -15,7 +15,7 @@ public class DirectoryInfoEnumeratorTests
         if (File.Exists(TestUtilities.Config["FilesFileName"]))
             File.Delete(TestUtilities.Config["FilesFileName"]);
 
-        DirectoryInfo info = new DirectoryInfo(TestUtilities.Config["ScanFolder"]);
+        DirectoryInfo info = new(TestUtilities.Config["ScanFolder"]);
         var files = info.EnumerateFiles();
         
         IList<string> values = new List<string>();
@@ -34,11 +34,14 @@ public class DirectoryInfoEnumeratorTests
         if (File.Exists(TestUtilities.Config["FilesFileName"]))
             File.Delete(TestUtilities.Config["FilesFileName"]);
 
-        DirectoryInfo info = new DirectoryInfo(TestUtilities.Config["ScanFolder"]);
-        EnumerationOptions options = new EnumerationOptions();
-        options.IgnoreInaccessible = true;
-        options.RecurseSubdirectories = true;
-        options.AttributesToSkip = FileAttributes.System;
+        DirectoryInfo info = new(TestUtilities.Config["ScanFolder"]);
+
+        EnumerationOptions options = new()
+        {
+            IgnoreInaccessible = true,
+            RecurseSubdirectories = true,
+            AttributesToSkip = FileAttributes.System
+        };
 
         var files = info.EnumerateFiles("*", options);
 
@@ -59,10 +62,10 @@ public class DirectoryInfoEnumeratorTests
         if (File.Exists(TestUtilities.Config["DirectoriesFileName"]))
             File.Delete(TestUtilities.Config["DirectoriesFileName"]);
 
-        DirectoryInfo info = new DirectoryInfo(TestUtilities.Config["ScanFolder"]);
+        DirectoryInfo info = new(TestUtilities.Config["ScanFolder"]);
         var files = info.EnumerateDirectories();
 
-        IList<string> values = new List<string>();
+        List<string> values = new();
         foreach (var f in files)
             values.Add(f.FullName);
 
@@ -78,15 +81,18 @@ public class DirectoryInfoEnumeratorTests
         if (File.Exists(TestUtilities.Config["DirectoriesFileName"]))
             File.Delete(TestUtilities.Config["DirectoriesFileName"]);
 
-        DirectoryInfo info = new DirectoryInfo(TestUtilities.Config["ScanFolder"]);
-        EnumerationOptions options = new EnumerationOptions();
-        options.IgnoreInaccessible = true;
-        options.RecurseSubdirectories = true;
-        options.AttributesToSkip = FileAttributes.System;
+        DirectoryInfo info = new(TestUtilities.Config["ScanFolder"]);
+
+        EnumerationOptions options = new()
+        {
+            IgnoreInaccessible = true,
+            RecurseSubdirectories = true,
+            AttributesToSkip = FileAttributes.System
+        };
 
         var files = info.EnumerateDirectories("*", options);
 
-        IList<string> values = new List<string>();
+        List<string> values = new();
         foreach (var f in files)
             values.Add(f.FullName);
 
@@ -102,10 +108,10 @@ public class DirectoryInfoEnumeratorTests
         if (File.Exists(TestUtilities.Config["FileSystemFileName"]))
             File.Delete(TestUtilities.Config["FileSystemFileName"]);
 
-        DirectoryInfo info = new DirectoryInfo(TestUtilities.Config["ScanFolder"]);
+        DirectoryInfo info = new(TestUtilities.Config["ScanFolder"]);
         var files = info.EnumerateFileSystemInfos();
 
-        IList<string> values = new List<string>();
+        List<string> values = new();
         foreach (var f in files)
             values.Add(f.FullName);
 
@@ -121,15 +127,18 @@ public class DirectoryInfoEnumeratorTests
         if (File.Exists(TestUtilities.Config["FileSystemFileName"]))
             File.Delete(TestUtilities.Config["FileSystemFileName"]);
 
-        DirectoryInfo info = new DirectoryInfo(TestUtilities.Config["ScanFolder"]);
-        EnumerationOptions options = new EnumerationOptions();
-        options.IgnoreInaccessible = true;
-        options.RecurseSubdirectories = true;
-        options.AttributesToSkip = FileAttributes.System;
+        DirectoryInfo info = new(TestUtilities.Config["ScanFolder"]);
+
+        EnumerationOptions options = new()
+        {
+            IgnoreInaccessible = true,
+            RecurseSubdirectories = true,
+            AttributesToSkip = FileAttributes.System
+        };
 
         var files = info.EnumerateFileSystemInfos("*", options);
 
-        IList<string> values = new List<string>();
+        List<string> values = new();
         foreach (var f in files)
             values.Add(f.FullName);
 
@@ -139,7 +148,7 @@ public class DirectoryInfoEnumeratorTests
     }
 
 
-    EnumerationOptions enumerateOptions = new EnumerationOptions();
+
 
     [TestMethod]
     [TestCategory(TestCategories.FunctionalTest)]
@@ -148,29 +157,30 @@ public class DirectoryInfoEnumeratorTests
         if (File.Exists(TestUtilities.Config["FilesDirectoriesFileName"]))
             File.Delete(TestUtilities.Config["FilesDirectoriesFileName"]);
 
-        enumerateOptions.IgnoreInaccessible = true;
-        //enumerateOptions.RecurseSubdirectories = false;
-        //enumerateOptions.AttributesToSkip = FileAttributes.System;
+        EnumerationOptions enumerationOptions = new()
+        {
+            IgnoreInaccessible = true
+        };
 
-        DirectoryInfo info = new DirectoryInfo(TestUtilities.Config["ScanFolder"]);
+        DirectoryInfo info = new(TestUtilities.Config["ScanFolder"]);
 
-        IList<string> values = new List<string>();
+        List<string> values = new();
             
-        DoDirectory(values, info);
+        DoDirectory(values, info, enumerationOptions);
 
         TestUtilities.WriteToFile(TestUtilities.Config["FilesDirectoriesFileName"], values);
 
         Assert.IsTrue(File.Exists(TestUtilities.Config["FilesDirectoriesFileName"]));
     }
 
-    public void DoDirectory(IList<string> values, DirectoryInfo info, string searchPattern="*")
+    public void DoDirectory(IList<string> values, DirectoryInfo info, EnumerationOptions enumerationOptions, string searchPattern="*")
     {
-        var files = info.EnumerateFiles(searchPattern, enumerateOptions);
+        var files = info.EnumerateFiles(searchPattern, enumerationOptions);
         foreach (var f in files)
             values.Add(f.FullName);
 
-        var directories = info.EnumerateDirectories(searchPattern, enumerateOptions);
+        var directories = info.EnumerateDirectories(searchPattern, enumerationOptions);
         foreach (var d in directories)
-            DoDirectory(values, d);
+            DoDirectory(values, d, enumerationOptions);
     }
 }

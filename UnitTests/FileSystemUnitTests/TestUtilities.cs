@@ -44,7 +44,7 @@ public static class TestUtilities
         if (File.Exists(path))
             File.Delete(path);
 
-        using var writer = new StreamWriter(path);
+        using StreamWriter writer = new(path);
         WriteToStreamWriter(writer, values);
     }
     
@@ -78,7 +78,7 @@ public static class TestUtilities
     }
     public static StreamReader LoadResourceFile(string resourcefile)
     {
-        StreamReader reader = new StreamReader(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcefile));
+        StreamReader reader = new(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcefile));
         return reader;
     }
     #endregion

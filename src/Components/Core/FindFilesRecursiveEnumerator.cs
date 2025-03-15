@@ -57,18 +57,18 @@ public class FindFilesRecursiveEnumerator : IEnumerator<FileSystemInfo>
 
     public bool MoveNext()
     {
-        if (CurrentFolderEnumerator == null)
+        if (CurrentFolderEnumerator is null)
             StartSubFolder();
 
-        if (FileMoveNext())
+        if (MoveNextFile())
             return true;
 
         bool keepGoing = false;
 
-        if (FolderMoveNext())
+        if (MoveNextFolder())
         {
             StartSubFolder();
-            if (!FileMoveNext())
+            if (!MoveNextFile())
                 keepGoing = DrillDown();
             else
                 keepGoing = true;
@@ -100,9 +100,9 @@ public class FindFilesRecursiveEnumerator : IEnumerator<FileSystemInfo>
     #endregion
 
     #region Folder Stack Functions
-    protected bool FileMoveNext() => CurrentFileEnumerator?.MoveNext() == true;
+    protected bool MoveNextFile() => CurrentFileEnumerator?.MoveNext() == true;
 
-    protected bool FolderMoveNext() => CurrentFolderEnumerator?.MoveNext() == true;
+    protected bool MoveNextFolder() => CurrentFolderEnumerator?.MoveNext() == true;
 
     private bool DrillDown()
     {
@@ -110,10 +110,10 @@ public class FindFilesRecursiveEnumerator : IEnumerator<FileSystemInfo>
 
         do
         {
-            if (FolderMoveNext())
+            if (MoveNextFolder())
             {
                 StartSubFolder();
-                keepGoing = FileMoveNext();
+                keepGoing = MoveNextFile();
             }
             else if (FolderStack.Count > 0)
                 keepGoing = GoBackUp();
@@ -133,10 +133,10 @@ public class FindFilesRecursiveEnumerator : IEnumerator<FileSystemInfo>
             EndSubFolder();
             if (CurrentFolderEnumerator is not null)
             {
-                if (FolderMoveNext())
+                if (MoveNextFolder())
                 {
                     StartSubFolder();
-                    keepGoing = FileMoveNext();
+                    keepGoing = MoveNextFile();
                     if (!keepGoing)
                         keepGoing = DrillDown();
                 }
@@ -154,7 +154,7 @@ public class FindFilesRecursiveEnumerator : IEnumerator<FileSystemInfo>
 
     private void StartSubFolder()
     {
-        if (CurrentFolderEnumerator != null)
+        if (CurrentFolderEnumerator is not null)
         {
             if (CurrentFolderEnumerator.Current is DirectoryInfo)
                 EnterFolder?.Invoke((CurrentFolderEnumerator.Current as DirectoryInfo)!);
@@ -166,10 +166,10 @@ public class FindFilesRecursiveEnumerator : IEnumerator<FileSystemInfo>
             
         FileOptions.Path = FolderOptions.Path;
 
-        FindFolders findFolder = new FindFolders(FolderOptions);
+        FindFolders findFolder = new(FolderOptions);
         CurrentFolderEnumerator = findFolder.Enumerate().GetEnumerator();
 
-        FindFiles findFiles = new FindFiles(FileOptions);
+        FindFiles findFiles = new(FileOptions);
         CurrentFileEnumerator = findFiles.Enumerate().GetEnumerator();
 
     }

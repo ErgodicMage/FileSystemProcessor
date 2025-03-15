@@ -59,7 +59,7 @@ public class FolderProcessor : IFileSystemProcessor
 
     public IFileSystemProcessor WithFilter(Predicate<FileSystemInfo> filter)
     {
-        Options.Filter = filter;
+        Options.Filter += filter;
         return this;
     }
 

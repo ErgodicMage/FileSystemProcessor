@@ -69,7 +69,7 @@ public class FindFiles : IFindFileSystem
 
     public IFindFileSystem WithFilter(Predicate<FileSystemInfo> filter)
     {
-        Options.Filter = filter;
+        Options.Filter += filter;
         return this;            
     }
     #endregion
@@ -95,20 +95,20 @@ public class FindFiles : IFindFileSystem
         DirectoryInfo directoryinfo = new(Options.Path ?? string.Empty);
         string pattern = Options.Pattern ?? string.Empty;
 
-        if (string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter == null)
+        if (string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter is null)
             return (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateFiles(pattern, enumerationoptions);
-        else if (!string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter == null)
+        else if (!string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter is null)
         {
             Regex regex = new(Options.RegExPattern, RegexOptions.Compiled);
             return (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateFiles(pattern, enumerationoptions)
                 .Where(file => regex.IsMatch(file.FullName));
         }
-        else if (string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter != null)
+        else if (string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter is not null)
         {
             return (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateFiles(pattern, enumerationoptions)
                 .Where(file => Options.Filter(file));
         }
-        else if (!string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter != null)
+        else if (!string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter is not null)
         {
             Regex regex = new(Options.RegExPattern);
             return (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateFiles(pattern, enumerationoptions)
