@@ -99,22 +99,22 @@ public class FindFolders : IFindFileSystem
 
 
         if (string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter is null)
-            return (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateDirectories(pattern, enumerationoptions);
+            return directoryinfo.EnumerateDirectories(pattern, enumerationoptions);
         else if (!string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter is null)
         {
             Regex regex = new(Options.RegExPattern, RegexOptions.Compiled);
-            return (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateDirectories(pattern, enumerationoptions)
+            return directoryinfo.EnumerateDirectories(pattern, enumerationoptions)
                 .Where(file => regex.IsMatch(file.FullName));
         }
         else if (string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter is not null)
         {
-            return (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateDirectories(pattern, enumerationoptions)
+            return directoryinfo.EnumerateDirectories(pattern, enumerationoptions)
                 .Where(file => Options.Filter(file));
         }
         else if (!string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter is not null)
         {
             Regex regex = new(Options.RegExPattern);
-            return (IEnumerable<FileSystemInfo>)directoryinfo.EnumerateDirectories(pattern, enumerationoptions)
+            return directoryinfo.EnumerateDirectories(pattern, enumerationoptions)
                 .Where(file => regex.IsMatch(file.FullName) && Options.Filter(file));
         }
 
