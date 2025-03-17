@@ -1,7 +1,4 @@
-﻿using ErgodicMage.FileSystemProcessor;
-using Microsoft.Extensions.Configuration;
-
-namespace FileSystemUnitTests;
+﻿namespace FileSystemProcessorTests;
 
 public class TestCategories
 {
@@ -12,7 +9,7 @@ public class TestCategories
 public static class TestUtilities
 {
     #region Configuration
-    public static IConfiguration Config { get; private set; }
+    public static IConfiguration? Config { get; private set; }
 
     public static void LoadAppSettings()
     {
@@ -39,8 +36,11 @@ public static class TestUtilities
     #endregion
 
     #region Write functionality
-    public static void WriteToFile(string path, IList<string> values)
+    public static void WriteToFile(string? path, IList<string> values)
     {
+        if (string.IsNullOrEmpty(path))
+            return;
+            
         if (File.Exists(path))
             File.Delete(path);
 
@@ -56,7 +56,7 @@ public static class TestUtilities
     #endregion
 
     #region Resource Functionality
-    const string testnamespace = "FileSystemUnitTests";
+    const string testnamespace = "FileSystemProcessorTests";
 
     public static string ReadResource(string folder, string resourcefile)
     {
@@ -78,7 +78,7 @@ public static class TestUtilities
     }
     public static StreamReader LoadResourceFile(string resourcefile)
     {
-        StreamReader reader = new(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcefile));
+        StreamReader reader = new((System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcefile))!);
         return reader;
     }
     #endregion
