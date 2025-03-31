@@ -1,4 +1,6 @@
 ﻿
+using System.Runtime.InteropServices;
+
 namespace ErgodicMage.FileSystemProcessor;
 
 public class FindFiles : IFindFileSystem
@@ -79,43 +81,6 @@ public class FindFiles : IFindFileSystem
     #endregion
 
     #region Public Methods
-    public IEnumerable<FileSystemInfo> Enumerate()
-    {
-        EnumerationOptions enumerationoptions = Options.Options ?? FindFilesOptions.DefaultEnumerationOptions;
-        if (Options.Recursive)
-        {
-            enumerationoptions = new EnumerationOptions()
-            {
-                AttributesToSkip = FindFilesOptions.DefaultEnumerationOptions.AttributesToSkip,
-                IgnoreInaccessible = FindFilesOptions.DefaultEnumerationOptions.IgnoreInaccessible,
-                RecurseSubdirectories = true
-            };
-        }
-
-        DirectoryInfo directoryinfo = new(Options.Path ?? string.Empty);
-        string pattern = Options.Pattern ?? string.Empty;
-
-        if (string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter is null)
-            return directoryinfo.EnumerateFiles(pattern, enumerationoptions);
-        else if (!string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter is null)
-        {
-            Regex regex = new(Options.RegExPattern, RegexOptions.Compiled);
-            return directoryinfo.EnumerateFiles(pattern, enumerationoptions)
-                .Where(file => regex.IsMatch(file.FullName));
-        }
-        else if (string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter is not null)
-        {
-            return directoryinfo.EnumerateFiles(pattern, enumerationoptions)
-                .Where(file => Options.Filter(file));
-        }
-        else if (!string.IsNullOrEmpty(Options.RegExPattern) && Options.Filter is not null)
-        {
-            Regex regex = new(Options.RegExPattern);
-            return directoryinfo.EnumerateFiles(pattern, enumerationoptions)
-                .Where(file => regex.IsMatch(file.FullName) && Options.Filter(file));
-        }
-
-        return Enumerable.Empty<FileSystemInfo>();
-    }
+    public IEnumerable<FileSystemInfo> Enumerate() => GetEnumerableFileSystemInfo.GetEnumerable(Options, true);
     #endregion
 }
