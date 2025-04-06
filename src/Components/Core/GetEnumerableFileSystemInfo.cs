@@ -1,8 +1,15 @@
 namespace ErgodicMage.FileSystemProcessor;
 
+internal enum EnumerateType
+{
+    None,
+    Files,
+    Directories
+}
+
 internal static class GetEnumerableFileSystemInfo
 {
-    internal static IEnumerable<FileSystemInfo> GetEnumerable(FindFilesOptions options, bool forFiles)
+    internal static IEnumerable<FileSystemInfo> GetEnumerable(FindFilesOptions options, EnumerateType enumerateType)
     {
         EnumerationOptions enumerationoptions = options.Options ?? FindFilesOptions.DefaultEnumerationOptions;
         if (options.Recursive)
@@ -19,9 +26,12 @@ internal static class GetEnumerableFileSystemInfo
         string pattern = options.Pattern ?? string.Empty;
         Regex? regex = string.IsNullOrEmpty(options.RegExPattern) ? null : new(options.RegExPattern, RegexOptions.Compiled);
 
-        IEnumerable<FileSystemInfo> enumerable = forFiles ? 
-            directoryinfo.EnumerateFiles(pattern, enumerationoptions) :
-            directoryinfo.EnumerateDirectories(pattern, enumerationoptions);
+        IEnumerable<FileSystemInfo> enumerable = enumerateType switch
+        {
+            EnumerateType.Files => directoryinfo.EnumerateFiles(pattern, enumerationoptions),
+            EnumerateType.Directories => directoryinfo.EnumerateDirectories(pattern, enumerationoptions),
+            _ => Enumerable.Empty<FileSystemInfo>()
+        };
 
         return options switch
         {

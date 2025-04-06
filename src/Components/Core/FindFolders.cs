@@ -81,6 +81,6 @@ public class FindFolders : IFindFileSystem
     #endregion
 
     #region Public Functions
-    public IEnumerable<FileSystemInfo> Enumerate() => GetEnumerableFileSystemInfo.GetEnumerable(Options, false);
+    public IEnumerable<FileSystemInfo> Enumerate() => GetEnumerableFileSystemInfo.GetEnumerable(Options, EnumerateType.Directories);
     #endregion
 }
