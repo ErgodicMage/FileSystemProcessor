@@ -8,7 +8,7 @@
     <RootNamespace>$(MSBuildProjectName)</RootNamespace>
     <PackageId>$(MSBuildProjectName)</PackageId>
     <Authors>Ergodic Mage</Authors>
-    <Product>CServe $(MSBuildProjectName)</Product>
+    <Product>ErgodicMage $(MSBuildProjectName)</Product>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
