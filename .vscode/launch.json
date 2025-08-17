@@ -8,11 +8,11 @@
             "name": ".NET Core Launch (console)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "dotnet: build C:\\Development\\EM\\FileSystemProcessor\\src\\Applications\\emdir\\emdir.csproj",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/UnitTests/FileSystemUnitTests/bin/Debug/net6.0/FileSystemUnitTests.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/UnitTests/FileSystemUnitTests",
+            "program": "${workspaceFolder}/src/Applications/emdir/bin/debug/net9.0/emdir.exe",
+            "args": ["-r", "${workspaceFolder}"],
+            "cwd": "${workspaceFolder}",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false

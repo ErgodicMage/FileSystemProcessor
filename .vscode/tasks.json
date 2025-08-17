@@ -1,41 +1,13 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "build",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/UnitTests/FileSystemUnitTests/FileSystemUnitTests.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "publish",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "publish",
-                "${workspaceFolder}/UnitTests/FileSystemUnitTests/FileSystemUnitTests.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "watch",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "watch",
-                "run",
-                "--project",
-                "${workspaceFolder}/UnitTests/FileSystemUnitTests/FileSystemUnitTests.csproj"
-            ],
-            "problemMatcher": "$msCompile"
-        }
-    ]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "dotnet",
+			"task": "build C:\\Development\\EM\\FileSystemProcessor\\src\\Applications\\emdir\\emdir.csproj",
+			"file": "C:\\Development\\EM\\FileSystemProcessor\\src\\Applications\\emdir\\emdir.csproj",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "dotnet: build C:\\Development\\EM\\FileSystemProcessor\\src\\Applications\\emdir\\emdir.csproj"
+		}
+	]
 }
