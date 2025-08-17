@@ -23,24 +23,29 @@ public class EMDirCommand : Command<EMDirSettings>
         return 0;
     }
 
-    private FindFilesOptions GetOptions(EMDirSettings setting) =>
+    private FindFilesOptions GetFileOptions(EMDirSettings settings) =>
         new()
         {
-            Path = setting.Path,
-            Pattern = setting.Pattern,
-            RegExPattern = setting.Regex,
-            Recursive = setting.Recursive,
+            Path = settings.Path ?? Directory.GetCurrentDirectory(),
+            Pattern = settings.Pattern,
+            RegExPattern = settings.Regex,
+            Recursive = settings.Recursive,
+        };
+
+    private FindFilesOptions GetFolderOptions(EMDirSettings settings) =>
+        new()
+        {
+            Path = settings.Path ?? Directory.GetCurrentDirectory(),
         };
 
     private IProcessor GetProcessor(EMDirSettings settings)
     {
-        FindFilesOptions options = GetOptions(settings);
-
         return settings.Recursive switch
         {
-            true => new RecursiveFileProcessor().WithFileOptions(options).WithFolderOptions(options).WithFileAction(FileAction)
+            true => new RecursiveFileProcessor().WithFileOptions(GetFileOptions(settings)).WithFolderOptions(GetFolderOptions(settings))
+                            .WithFileAction(FileAction)
                             .WithEnterFolderAction(EnterFolderAction).WithExitFolderAction(ExitFolderAction),
-            _ => new FileProcessor().WithOptions(options).WithAction(FileSystemAction)
+            _ => new FileProcessor().WithOptions(GetFileOptions(settings)).WithAction(FileSystemAction)
         };
     }
 
