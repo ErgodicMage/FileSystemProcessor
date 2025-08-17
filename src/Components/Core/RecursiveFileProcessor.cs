@@ -49,7 +49,7 @@ public class RecursiveFileProcessor : IRecursiveFileProcessor
 
     public IRecursiveFileProcessor WithFolderOptions(FindFilesOptions options)
     {
-        FolderOptions = FileOptions;
+        FolderOptions = options;
         return this;
     }
 
