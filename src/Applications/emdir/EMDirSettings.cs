@@ -20,5 +20,5 @@ public class EMDirSettings : CommandSettings
 
     [Description("Include subfolders. Default false.")]
     [CommandOption("-r|--recursive")]
-    public bool Recurse { get; init; }
+    public bool Recursive { get; init; }
 }
