@@ -49,9 +49,9 @@ public class EMDirCommand : Command<EMDirSettings>
         };
     }
 
-    private void FileAction(FileInfo? fi) => AnsiConsole.WriteLine($"{fi?.Name} {fi?.Length}");
-    private void FileSystemAction(FileSystemInfo fsi) => AnsiConsole.WriteLine($"{fsi.Name} {(fsi as FileInfo)?.Length}");
+    private void FileAction(FileInfo? fi) => AnsiConsole.MarkupLine($"[blue]{fi?.Name}[/] [green]{fi?.Length}[/]");
+    private void FileSystemAction(FileSystemInfo fsi) => AnsiConsole.MarkupLine($"[blue]{fsi.Name}[/] [green]{(fsi as FileInfo)?.Length}[/]");
 
-    private void EnterFolderAction(DirectoryInfo di) => AnsiConsole.WriteLine($"Entering {di.Name}");
-    private void ExitFolderAction(DirectoryInfo di) => AnsiConsole.WriteLine($"Exiting {di.Name}");
+    private void EnterFolderAction(DirectoryInfo di) => AnsiConsole.MarkupLine($"[yellow]Entering {di.Name}[/]");
+    private void ExitFolderAction(DirectoryInfo di) => AnsiConsole.MarkupLine($"[yellow]Exiting {di.Name}[/]");
 }
