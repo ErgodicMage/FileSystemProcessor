@@ -55,6 +55,7 @@ public class RecursiveFileProcessor : IRecursiveFileProcessor
 
     public IRecursiveFileProcessor WithPath(string path)
     {
+        FileOptions.Path = path;
         FolderOptions.Path = path;
         return this;
     }

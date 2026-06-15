@@ -11,7 +11,7 @@ public class FolderProcessor : IFileSystemProcessor
 
     public FolderProcessor(string path)
     {
-        Options = new FindFilesOptions();
+        Options = new FindFilesOptions() { Path = path };
     }
 
     public FolderProcessor(FindFilesOptions options)
