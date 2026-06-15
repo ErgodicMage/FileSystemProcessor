@@ -11,6 +11,8 @@ internal static class GetEnumerableFileSystemInfo
 {
     internal static IEnumerable<FileSystemInfo> GetEnumerable(FindFilesOptions options, EnumerateType enumerateType)
     {
+        ValidateOptions(options);
+
         EnumerationOptions enumerationoptions = options.Options ?? FindFilesOptions.DefaultEnumerationOptions;
         if (options.Recursive)
         {
@@ -41,5 +43,31 @@ internal static class GetEnumerableFileSystemInfo
             var o when regex is not null && o.Filter is not null => enumerable.Where(file => regex.IsMatch(file.FullName) && o.Filter(file)),
             _ => Enumerable.Empty<FileSystemInfo>()
         };
+    }
+
+    private static void ValidateOptions(FindFilesOptions options)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+
+        if (string.IsNullOrWhiteSpace(options.Path))
+            throw new ArgumentException("Path is required.", nameof(options.Path));
+
+        if (!Directory.Exists(options.Path))
+            throw new DirectoryNotFoundException($"Directory not found: {options.Path}.");
+
+        if (string.IsNullOrWhiteSpace(options.Pattern))
+            options.Pattern = "*";
+
+        if (!string.IsNullOrWhiteSpace(options.RegExPattern))
+        {
+            try 
+            { 
+                _ = new Regex(options.RegExPattern, RegexOptions.Compiled); 
+            }
+            catch (Exception ex) when (ex is ArgumentException)
+            {
+                throw new ArgumentException($"Invalid regex pattern: {options.RegExPattern} .", nameof(options.RegExPattern), ex);
+            }
+        }
     }
 }
